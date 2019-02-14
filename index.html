@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Pixi JS Demo</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="css/base.css">
+    </head>
+    <body>
+        <h1>Smart City of the Future</h1>
+        <script src="pixi.min.js"></script>
+        <script>
+
+            // Constants
+            const carScale = 0.1; // Smaller value makes the car smaller
+            const carWidth = 800;
+            const carHeight = 400;
+            const carWidthWithScale = carWidth * carScale;
+            const carHeightWithScale = carHeight * carScale;
+            const roadLaneWidth = carHeightWithScale*1.5;
+            const canvasWidth = 1200;
+            const canvasHeight = 700;
+            const upDirectionRadian = 4.71239; // Radian value to set car.rotation when it is moving up
+            const rightDirectionRadian = 0.0; // Radian value to set car.rotation when it is moving right
+            const downDirectionRadian = 1.5708; // Radian value to set car.rotation when it is moving down
+            const leftDirectionRadian = 3.14159; // Radian value to set car.rotation when it is moving left
+            
+            // Check if Pixi renders correctly
+            let type = "WebGL";
+            if (!PIXI.utils.isWebGLSupported()) {
+                type = "canvas";
+            }
+            PIXI.utils.sayHello(type) // Should output a design on the Javascript console
+
+            // Aliases
+            let Application = PIXI.Application,
+            loader = PIXI.loader,
+            resources = PIXI.loader.resources,
+            Sprite = PIXI.Sprite,
+            Graphics = PIXI.Graphics;
+
+            //Create a Pixi Application
+            let app = new Application({
+                width: canvasWidth,
+                height: canvasHeight,
+                backgroundColor: 0xFFFFFF
+            });
+
+            //Add the canvas that Pixi automatically created for you to the HTML document
+            document.body.appendChild(app.view);
+
+            // Draw all the lanes
+            let drawMap = function(app) {
+                let line = new Graphics();
+                line.lineStyle(4, 0x000000, 1);
+
+                line.moveTo(canvasWidth/2 - roadLaneWidth, 0);
+                line.lineTo(canvasWidth/2 - roadLaneWidth, 700);
+                app.stage.addChild(line);
+
+                line.moveTo(canvasWidth/2 + roadLaneWidth, 0);
+                line.lineTo(canvasWidth/2 + roadLaneWidth, 700);
+                app.stage.addChild(line);
+            }(app);
+
+            // Draw the car
+            // Load the image and its texture to the PIXI App and run the setup function when completed
+            loader
+                .add("images/redcar.png")
+                .load(setup);
+
+            function setup() {
+                // Create the spirte for a red car using the texture loaded above
+                let redCarSprite = new Sprite(
+                    resources["images/redcar.png"].texture
+                );
+
+                // Make car smaller
+                redCarSprite.scale.set(carScale, carScale);
+
+                // This line does 2 things :-
+                // Changes the (x,y) for setting car's positiong to the car's center (as opposed to the top left)
+                // Changes the rotation point to the car's center (as opposed to the top left)
+                redCarSprite.pivot.set(carWidth/2, carHeight/2);
+
+                redCarSprite.rotation = upDirectionRadian;
+                redCarSprite.position.set(canvasWidth/2 - roadLaneWidth/2, canvasHeight - carWidthWithScale/2);
+
+                // Add the car to the canvas
+                app.stage.addChild(redCarSprite)
+            }
+
+        </script>
+    </body>
+</html>
