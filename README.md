@@ -3,9 +3,9 @@
 ### Requirements
 This is a list of languages/libraries you'll need to be familiar in to work on this project :-
 
-1. Basic HTML, and knowledge of the Canvas element. If you're unfamiliar with Canvas, it's what is used to draw on webpages. We'll be using PixiJS to draw on the Canvas.
+1. Basic HTML
 2. Basic JavaScript
-3. Pixi JS : A library to simplify rendering on the HTML Canvas. Click [here](https://github.com/kittykatattack/learningPixi) to get started.
+3. Babylon JS : A library to simplify 3D rendering on the HTML Canvas. Click [here](https://doc.babylonjs.com/#getting-started) to get started.
 
 ### Installation
 1. Clone the repo
