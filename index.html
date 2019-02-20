@@ -8,11 +8,11 @@
     </head>
     <body>
         <h1>Smart City of the Future</h1>
-        <script src="pixi.min.js"></script>
+        <script src="js/pixi.min.js"></script>
         <script>
 
             // Constants
-            const carScale = 0.1; // Smaller value makes the car smaller
+            const carScale = 0.05; // Smaller value makes the car smaller
             const carWidth = 800;
             const carHeight = 400;
             const carWidthWithScale = carWidth * carScale;
@@ -54,12 +54,41 @@
                 let line = new Graphics();
                 line.lineStyle(4, 0x000000, 1);
 
+                line.moveTo(canvasWidth/4 - roadLaneWidth, 0);
+                line.lineTo(canvasWidth/4 - roadLaneWidth, canvasHeight);
+
+                line.moveTo(canvasWidth/4 + roadLaneWidth, 0);
+                line.lineTo(canvasWidth/4 + roadLaneWidth, canvasHeight);
+
                 line.moveTo(canvasWidth/2 - roadLaneWidth, 0);
-                line.lineTo(canvasWidth/2 - roadLaneWidth, 700);
+                line.lineTo(canvasWidth/2 - roadLaneWidth, canvasHeight);
                 app.stage.addChild(line);
 
                 line.moveTo(canvasWidth/2 + roadLaneWidth, 0);
-                line.lineTo(canvasWidth/2 + roadLaneWidth, 700);
+                line.lineTo(canvasWidth/2 + roadLaneWidth, canvasHeight);
+
+                line.moveTo(3*canvasWidth/4 - roadLaneWidth, 0);
+                line.lineTo(3*canvasWidth/4 - roadLaneWidth, canvasHeight);
+                app.stage.addChild(line);
+
+                line.moveTo(3*canvasWidth/4 + roadLaneWidth, 0);
+                line.lineTo(3*canvasWidth/4 + roadLaneWidth, canvasHeight);
+                app.stage.addChild(line);
+
+                line.moveTo(0, canvasHeight/3 - roadLaneWidth);
+                line.lineTo(canvasWidth, canvasHeight/3 - roadLaneWidth);
+                app.stage.addChild(line);
+
+                line.moveTo(0, canvasHeight/3 + roadLaneWidth);
+                line.lineTo(canvasWidth, canvasHeight/3 + roadLaneWidth);
+                app.stage.addChild(line);
+
+                line.moveTo(0, 2*canvasHeight/3 - roadLaneWidth);
+                line.lineTo(canvasWidth, 2*canvasHeight/3 - roadLaneWidth);
+                app.stage.addChild(line);
+
+                line.moveTo(0, 2*canvasHeight/3 + roadLaneWidth);
+                line.lineTo(canvasWidth, 2*canvasHeight/3 + roadLaneWidth);
                 app.stage.addChild(line);
             }(app);
 
