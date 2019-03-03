@@ -1,10 +1,8 @@
-///<reference path="babylon.d.ts" />
-
 class Game {
     private _canvas: HTMLCanvasElement;
     private _engine: BABYLON.Engine;
     private _scene: BABYLON.Scene;
-    private _camera: BABYLON.FreeCamera;
+    private _camera: BABYLON.ArcRotateCamera;
     private _light: BABYLON.Light;
 
     constructor(canvasElement : string) {
@@ -18,7 +16,7 @@ class Game {
         this._scene = new BABYLON.Scene(this._engine);
 
         // Create a FreeCamera, and set its position to (x:0, y:5, z:-10).
-        this._camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5,-10), this._scene);
+        this._camera = new BABYLON.ArcRotateCamera('maincamera', Math.PI/4, Math.PI/4, 15, new BABYLON.Vector3(0, 0, 0), this._scene);
 
         // Target the camera to scene origin.
         this._camera.setTarget(BABYLON.Vector3.Zero());
@@ -29,16 +27,11 @@ class Game {
         // Create a basic light, aiming 0,1,0 - meaning, to the sky.
         this._light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0,1,0), this._scene);
 
-        // Create a built-in "sphere" shape; with 16 segments and diameter of 2.
-        let sphere = BABYLON.MeshBuilder.CreateSphere('sphere1',
-                                {segments: 16, diameter: 2}, this._scene);
-
-        // Move the sphere upward 1/2 of its height.
-        sphere.position.y = 1;
-
         // Create a built-in "ground" shape.
-        let ground = BABYLON.MeshBuilder.CreateGround('ground1',
-                                {width: 6, height: 6, subdivisions: 2}, this._scene);
+        let ground = BABYLON.MeshBuilder.CreateGround('ground1', {width: 12, height: 12, subdivisions: 1}, this._scene);
+
+        ground.position.set(-2,0,-2);
+
     }
 
     doRender() : void {
