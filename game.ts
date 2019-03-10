@@ -22,10 +22,14 @@ class Game {
     private _cityHeight: number
     private _roadWidth: number
 
+    private _allCars: Array<Car>
+
     constructor(canvasElement : string) {
+
         // Create canvas and engine.
         this._canvas = document.getElementById(canvasElement) as HTMLCanvasElement;
         this._engine = new BABYLON.Engine(this._canvas, true);
+        this._engine.enableOfflineSupport = false;
 
         // Initialize properties
         this._directionalLight = {
@@ -43,8 +47,8 @@ class Game {
         this._horizontalRoads = [];
         this._verticalRoadHeight = 0.01;
         this._horizontalRoadHeight = 0.02;
-        this._cityWidth = 20;
-        this._cityHeight = 12;
+        this._cityWidth = 23;
+        this._cityHeight = 16;
         this._roadWidth = 2;
     }
 
@@ -110,7 +114,31 @@ class Game {
             road.rotate(new BABYLON.Vector3(1,0,0), BABYLON.Tools.ToRadians(90));
         });
 
+        this.addCar(new BABYLON.Vector3(0.5, 0, 0));
         this.generateShadows(ground);
+
+    }
+
+    addCar(position: BABYLON.Vector3): void {
+        BABYLON.SceneLoader.ImportMesh("", "images/cars/Babylon/", "SportsCar.babylon", this._scene, (newmeshes) => {
+            newmeshes.forEach(mesh => {
+                mesh.id = "car1";
+                mesh.position = position
+                mesh.scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
+                
+                var carMesh = this._scene.getMeshByID("car1");
+                // console.log(carMesh);
+                // var anim = new BABYLON.Animation("rando", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                // var keys = [{frame: 0,value: carMesh.position}, {frame: 100,value: new BABYLON.Vector3(0.5, 0,-5)}];
+                // anim.setKeys(keys);
+                // carMesh.animations.push(anim);
+                // this._scene.beginAnimation(carMesh, 0, 100, false);
+
+                this.addToShadow(carMesh);
+            });
+        });
+
+        this._allCars.push(new Car(1))
     }
 
     createLight(): void {
@@ -131,6 +159,13 @@ class Game {
         });
 
         ground.receiveShadows = true;
+    }
+
+    addToShadow(...items: BABYLON.AbstractMesh[]): void {
+        let shadowGenerator = new BABYLON.ShadowGenerator(512, this._directionalLight.light);
+        items.forEach(item => {
+            shadowGenerator.getShadowMap().renderList.push(item)
+        });
     }
 
     doRender() : void {
