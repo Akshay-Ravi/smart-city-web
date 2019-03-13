@@ -1,3 +1,5 @@
+import * as BABYLON from 'babylonjs';
+
 class Game {
     private _canvas: HTMLCanvasElement;
     private _engine: BABYLON.Engine;
@@ -21,8 +23,6 @@ class Game {
     private _cityWidth: number
     private _cityHeight: number
     private _roadWidth: number
-
-    private _allCars: Array<Car>
 
     constructor(canvasElement : string) {
 
@@ -71,7 +71,7 @@ class Game {
         
         // Give ground a grass texture
         var groundMaterial = new BABYLON.StandardMaterial("groundMaterial", this._scene);
-        var groundTexture = new BABYLON.Texture("images/grass.jpg", this._scene);
+        var groundTexture = new BABYLON.Texture("../images/grass.jpg", this._scene);
         groundTexture.uScale = this._cityWidth;
         groundTexture.vScale = this._cityHeight;
         groundMaterial.diffuseTexture = groundTexture;
@@ -79,7 +79,7 @@ class Game {
 
         // Create the road texture for assigning to the road meshes later
         var roadMaterial = new BABYLON.StandardMaterial("roadMaterial", this._scene);
-        roadMaterial.diffuseTexture = new BABYLON.Texture("images/road.png", this._scene);
+        roadMaterial.diffuseTexture = new BABYLON.Texture("../images/road.png", this._scene);
         
         // CREATE ALL ROADS
         var road1 = BABYLON.MeshBuilder.CreatePlane("road1", {width: this._roadWidth, height: this._cityHeight}, this._scene);
@@ -120,25 +120,22 @@ class Game {
     }
 
     addCar(position: BABYLON.Vector3): void {
-        BABYLON.SceneLoader.ImportMesh("", "images/cars/Babylon/", "SportsCar.babylon", this._scene, (newmeshes) => {
+        BABYLON.SceneLoader.ImportMesh("", "../images/cars/Babylon/", "SportsCar.babylon", this._scene, (newmeshes) => {
             newmeshes.forEach(mesh => {
                 mesh.id = "car1";
                 mesh.position = position
                 mesh.scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
                 
                 var carMesh = this._scene.getMeshByID("car1");
-                // console.log(carMesh);
-                // var anim = new BABYLON.Animation("rando", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-                // var keys = [{frame: 0,value: carMesh.position}, {frame: 100,value: new BABYLON.Vector3(0.5, 0,-5)}];
-                // anim.setKeys(keys);
-                // carMesh.animations.push(anim);
-                // this._scene.beginAnimation(carMesh, 0, 100, false);
+                var anim = new BABYLON.Animation("rando", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                var keys = [{frame: 0,value: carMesh.position}, {frame: 100,value: new BABYLON.Vector3(0.5, 0,-5)}];
+                anim.setKeys(keys);
+                carMesh.animations.push(anim);
+                this._scene.beginAnimation(carMesh, 0, 100, false);
 
                 this.addToShadow(carMesh);
             });
         });
-
-        this._allCars.push(new Car(1))
     }
 
     createLight(): void {

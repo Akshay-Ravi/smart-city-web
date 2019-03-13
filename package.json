@@ -1,0 +1,29 @@
+{
+  "name": "smart-city-web",
+  "version": "1.0.0",
+  "description": "### Requirements This is a list of languages/libraries you'll need to be familiar in to work on this project :-",
+  "private": true,
+  "scripts": {
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gauthamk97/smart-city-web.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gauthamk97/smart-city-web/issues"
+  },
+  "homepage": "https://github.com/gauthamk97/smart-city-web#readme",
+  "devDependencies": {
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.3.3333",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
+  },
+  "dependencies": {
+    "babylonjs": "^3.3.0"
+  }
+}

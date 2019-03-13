@@ -8,21 +8,35 @@ This is a list of languages/libraries you'll need to be familiar in to work on t
 3. Babylon JS : A library to simplify 3D rendering on the HTML Canvas. Click [here](https://doc.babylonjs.com/#getting-started) to get started.
 
 ### Installation
-1. Clone the repo
+1. If you're on windows, FOR THE LOVE OF GOD, reboot into Linux. Any distro, I don't care.
+
+2. Clone the repo
 ```bash
 git clone https://github.com/gauthamk97/smart-city-web
 ```
 
-2. Navigate to the root directory of the project
+3. Navigate to the root directory of the project
 ```bash
 cd smart-city-web
 ```
 
-3. Run any webserver of your choice (I prefer python's built in SimpleHTTPServer)
+4. Install all the required dependencies using npm (node package manager)
+```bash
+npm install
+```
+If you don't have npm installed, click [here](https://www.npmjs.com/get-npm) to install it. (You can check if you do have it installed by simply running `npm` in the terminal)
+
+5. Compile the typescript files into javascript along with all of their dependencies.
+```bash
+npm run build
+```
+ > Note : I'm using webpack for this - click [here](https://webpack.js.org/guides/getting-started) if you want to know more about webpack. Else, just run the command and move on.
+
+6. Run any webserver of your choice (I prefer python's built in SimpleHTTPServer)
 ```bash
 python -m "SimpleHTTPServer"
 ```
 
 > Note : I use Python v2.7.15
 
-4. Open Google Chrome and visit *localhost:8000*
+7. Open Google Chrome and visit *localhost:8000/dist*
