@@ -16,6 +16,9 @@ module.exports = {
             }
         ]
     },
+    resolve: {
+        extensions: ['.ts']
+    },
     "stats": {
         "warnings": false
     },
