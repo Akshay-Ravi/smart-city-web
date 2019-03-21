@@ -1,4 +1,8 @@
-import * as BABYLON from 'babylonjs';
+import Edge from './edge';
+import Car from './car';
+import Map from './map';
+import * as constants from './constants';
+import GraphNode from './node';
 
 class Game {
     private _canvas: HTMLCanvasElement;
@@ -23,6 +27,8 @@ class Game {
     private _cityWidth: number
     private _cityHeight: number
     private _roadWidth: number
+
+    private _numberOfCars: number
 
     constructor(canvasElement : string) {
 
@@ -50,6 +56,7 @@ class Game {
         this._cityWidth = 23;
         this._cityHeight = 16;
         this._roadWidth = 2;
+        this._numberOfCars = 0;
     }
 
     createScene() : void {
@@ -59,7 +66,7 @@ class Game {
         this._scene.clearColor = new BABYLON.Color4(0,0,0,1); // Set background color to black
 
         // Create the camera
-        this._camera = new BABYLON.ArcRotateCamera('maincamera', BABYLON.Tools.ToRadians(90), BABYLON.Tools.ToRadians(30), 18, new BABYLON.Vector3(0, 0, 0), this._scene);
+        this._camera = new BABYLON.ArcRotateCamera('maincamera', BABYLON.Tools.ToRadians(270), BABYLON.Tools.ToRadians(30), 22, new BABYLON.Vector3(0, 0, 0), this._scene);
         this._camera.attachControl(this._canvas, false); // Attach the camera to the canvas to allow mouse movement
 
         // Create all light necessary for the scene
@@ -114,26 +121,39 @@ class Game {
             road.rotate(new BABYLON.Vector3(1,0,0), BABYLON.Tools.ToRadians(90));
         });
 
-        this.addCar(new BABYLON.Vector3(0.5, 0, 0));
         this.generateShadows(ground);
 
     }
 
-    addCar(position: BABYLON.Vector3): void {
+    addCar(edge: Edge, destination: GraphNode): void {
+        this._numberOfCars++;
+
         BABYLON.SceneLoader.ImportMesh("", "../images/cars/Babylon/", "SportsCar.babylon", this._scene, (newmeshes) => {
             newmeshes.forEach(mesh => {
-                mesh.id = "car1";
-                mesh.position = position
+                mesh.id = "car"+this._numberOfCars;
+                mesh.position = edge.source.pos.getVector3();
                 mesh.scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
-                
-                var carMesh = this._scene.getMeshByID("car1");
-                var anim = new BABYLON.Animation("rando", "position", 30, BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-                var keys = [{frame: 0,value: carMesh.position}, {frame: 100,value: new BABYLON.Vector3(0.5, 0,-5)}];
-                anim.setKeys(keys);
-                carMesh.animations.push(anim);
-                this._scene.beginAnimation(carMesh, 0, 100, false);
 
-                this.addToShadow(carMesh);
+                switch (edge.direction) {
+                    case constants.ABSOLUTE_DIRECTION.North:
+                        mesh.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(180));
+                        break;
+                    case constants.ABSOLUTE_DIRECTION.East:
+                        mesh.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(270));
+                        break;
+                    case constants.ABSOLUTE_DIRECTION.South:
+                        mesh.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(0));
+                        break;
+                    case constants.ABSOLUTE_DIRECTION.West:
+                        mesh.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(90));
+                        break;
+                }
+                
+                let car = new Car(edge.source, destination, edge, 0, new Date(), null, true, constants.RELATIVE_DIRECTION.Red, null, false, mesh);
+                car.move(this._scene);
+                edge.addCar(car);
+
+                this.addToShadow(mesh);
             });
         });
     }
@@ -187,4 +207,46 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Start render loop.
     game.doRender();
+
+    // Get the Map of all edges and nodes
+    const GAME_MAP = new Map();
+
+    game.addCar(GAME_MAP.getEdge(1), null);
+    game.addCar(GAME_MAP.getEdge(2), null);
+    game.addCar(GAME_MAP.getEdge(3), null);
+    game.addCar(GAME_MAP.getEdge(4), null);
+    game.addCar(GAME_MAP.getEdge(5), null);
+    game.addCar(GAME_MAP.getEdge(6), null);
+
+    game.addCar(GAME_MAP.getEdge(7), null);
+    game.addCar(GAME_MAP.getEdge(8), null);
+    game.addCar(GAME_MAP.getEdge(9), null);
+    game.addCar(GAME_MAP.getEdge(10), null);
+    game.addCar(GAME_MAP.getEdge(11), null);
+    game.addCar(GAME_MAP.getEdge(12), null);
+
+    game.addCar(GAME_MAP.getEdge(13), null);
+    game.addCar(GAME_MAP.getEdge(14), null);
+    game.addCar(GAME_MAP.getEdge(15), null);
+    game.addCar(GAME_MAP.getEdge(16), null);
+    game.addCar(GAME_MAP.getEdge(17), null);
+    game.addCar(GAME_MAP.getEdge(18), null);
+
+    game.addCar(GAME_MAP.getEdge(19), null);
+    game.addCar(GAME_MAP.getEdge(20), null);
+    game.addCar(GAME_MAP.getEdge(21), null);
+    game.addCar(GAME_MAP.getEdge(22), null);
+    game.addCar(GAME_MAP.getEdge(23), null);
+    game.addCar(GAME_MAP.getEdge(24), null);
+    game.addCar(GAME_MAP.getEdge(25), null);
+    game.addCar(GAME_MAP.getEdge(26), null);
+
+    game.addCar(GAME_MAP.getEdge(27), null);
+    game.addCar(GAME_MAP.getEdge(28), null);
+    game.addCar(GAME_MAP.getEdge(29), null);
+    game.addCar(GAME_MAP.getEdge(30), null);
+    game.addCar(GAME_MAP.getEdge(31), null);
+    game.addCar(GAME_MAP.getEdge(32), null);
+    game.addCar(GAME_MAP.getEdge(33), null);
+    game.addCar(GAME_MAP.getEdge(34), null);
 });
