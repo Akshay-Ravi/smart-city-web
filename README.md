@@ -32,7 +32,9 @@ npm run build
 ```
  > Note : I'm using webpack for this - click [here](https://webpack.js.org/guides/getting-started) if you want to know more about webpack. Else, just run the command and move on.
 
-6. Run any webserver of your choice (I prefer python's built in SimpleHTTPServer)
+ > This command will continue watching for any changes to the code, and automatically recompile when any changes are detected.
+
+6. Open a separate terminal and run any webserver of your choice (I prefer python's built in SimpleHTTPServer)
 ```bash
 python -m "SimpleHTTPServer"
 ```
