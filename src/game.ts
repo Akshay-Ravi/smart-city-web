@@ -149,10 +149,9 @@ class Game {
                         break;
                 }
                 
-                let car = new Car(edge.source, destination, edge, 0, new Date(), null, true, constants.RELATIVE_DIRECTION.Red, null, false, mesh);
-                car.move(this._scene);
+                let car = new Car(edge.source, destination, edge, 0, new Date(), null, true, constants.RELATIVE_DIRECTION.Red, null, false, mesh, this._scene);
+                car.move();
                 edge.addCar(car);
-
                 this.addToShadow(mesh);
             });
         });
@@ -211,27 +210,26 @@ window.addEventListener('DOMContentLoaded', () => {
     // Get the Map of all edges and nodes
     const GAME_MAP = new Map();
 
+    game.addCar(GAME_MAP.getEdge(7), null);
     game.addCar(GAME_MAP.getEdge(1), null);
+    game.addCar(GAME_MAP.getEdge(10), null);
+    game.addCar(GAME_MAP.getEdge(14), null);
+    game.addCar(GAME_MAP.getEdge(17), null);
+    game.addCar(GAME_MAP.getEdge(28), null);
+
     game.addCar(GAME_MAP.getEdge(2), null);
     game.addCar(GAME_MAP.getEdge(3), null);
     game.addCar(GAME_MAP.getEdge(4), null);
     game.addCar(GAME_MAP.getEdge(5), null);
     game.addCar(GAME_MAP.getEdge(6), null);
-
-    game.addCar(GAME_MAP.getEdge(7), null);
     game.addCar(GAME_MAP.getEdge(8), null);
     game.addCar(GAME_MAP.getEdge(9), null);
-    game.addCar(GAME_MAP.getEdge(10), null);
     game.addCar(GAME_MAP.getEdge(11), null);
     game.addCar(GAME_MAP.getEdge(12), null);
-
     game.addCar(GAME_MAP.getEdge(13), null);
-    game.addCar(GAME_MAP.getEdge(14), null);
     game.addCar(GAME_MAP.getEdge(15), null);
     game.addCar(GAME_MAP.getEdge(16), null);
-    game.addCar(GAME_MAP.getEdge(17), null);
     game.addCar(GAME_MAP.getEdge(18), null);
-
     game.addCar(GAME_MAP.getEdge(19), null);
     game.addCar(GAME_MAP.getEdge(20), null);
     game.addCar(GAME_MAP.getEdge(21), null);
@@ -240,9 +238,7 @@ window.addEventListener('DOMContentLoaded', () => {
     game.addCar(GAME_MAP.getEdge(24), null);
     game.addCar(GAME_MAP.getEdge(25), null);
     game.addCar(GAME_MAP.getEdge(26), null);
-
     game.addCar(GAME_MAP.getEdge(27), null);
-    game.addCar(GAME_MAP.getEdge(28), null);
     game.addCar(GAME_MAP.getEdge(29), null);
     game.addCar(GAME_MAP.getEdge(30), null);
     game.addCar(GAME_MAP.getEdge(31), null);

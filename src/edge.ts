@@ -26,6 +26,7 @@ export default class Edge {
     }
 
     removeCar() {
+        this.cars.shift();
         this.weight--;
     }
 
