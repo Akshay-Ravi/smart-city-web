@@ -218,7 +218,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(() => {
         game.addCar(constants.GAME_MAP.getEdge(1), null);
-    }, 3000);
+    }, 2000);
 
     // game.addCar(GAME_MAP.getEdge(10), null);
     // game.addCar(GAME_MAP.getEdge(14), null);

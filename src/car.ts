@@ -136,6 +136,17 @@ export default class Car {
             this.turnDetails.turnRadiusZ = this.nextEdge.source.pos.z - this.mesh.position.z;
             this.turnDetails.turnDegree = 0;
             this.edge.removeCar();
+
+            // // Tell cars behind it to start moving forward
+            for (let car of this.edge.cars) {
+                if (car == this) {
+                    console.log("Car "+car.id+" is turning");
+                } else {
+                    if (!car.isMoving) {
+                        car.move();
+                    }
+                }
+            }
         }
 
         let rotationAngle: number
@@ -150,7 +161,7 @@ export default class Car {
             turnFrames = constants.TURN_FRAMES_PER_MOVEMENT_RIGHT
         } else if (this.nextTurn == constants.RELATIVE_DIRECTION.Straight) {
             rotationAngle = 0;
-            turnFrames = constants.TURN_FRAMES_PER_MOVEMENT_STRAIGHT
+            turnFrames = constants.FRAMES_PER_MOVEMENT
         }
 
         // Find next position for the car, while turning
@@ -163,6 +174,30 @@ export default class Car {
         } else {
             changeInX = this.turnDetails.turnRadiusX*(Math.sin(BABYLON.Tools.ToRadians(this.turnDetails.turnDegree + this.turnDetails.degreeChange)) - Math.sin(BABYLON.Tools.ToRadians(this.turnDetails.turnDegree)))
             changeInZ = this.turnDetails.turnRadiusZ*(Math.cos(BABYLON.Tools.ToRadians(this.turnDetails.turnDegree)) - Math.cos(BABYLON.Tools.ToRadians(this.turnDetails.turnDegree + this.turnDetails.degreeChange)))
+        }
+        
+        // If car is going straight, override all cos and sin functions above and simply move at a constant speed
+        if (this.nextTurn == constants.RELATIVE_DIRECTION.Straight) {
+            switch (this.edge.direction) {
+                case constants.ABSOLUTE_DIRECTION.North:
+                    changeInX = 0;
+                    changeInZ = constants.CAR_SPEED;
+                    break;
+                case constants.ABSOLUTE_DIRECTION.South:
+                    changeInX = 0;
+                    changeInZ = -(constants.CAR_SPEED);
+                    break;
+                case constants.ABSOLUTE_DIRECTION.East:
+                    changeInX = constants.CAR_SPEED;
+                    changeInZ = 0;
+                    break;
+                case constants.ABSOLUTE_DIRECTION.West:
+                    changeInX = -(constants.CAR_SPEED);
+                    changeInZ = 0;
+                    break;
+                default:
+                    break;
+            }
         }
         
         let nextPosition = new BABYLON.Vector3(this.mesh.position.x + changeInX, 0, this.mesh.position.z + changeInZ)

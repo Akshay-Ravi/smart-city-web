@@ -22,15 +22,15 @@ export default class Edge {
 
     addCar(c: Car) {
         this.cars.push(c);
-        console.log(this.cars);
         this.weight++;
         c.edgeCarNumber = this.weight
-        // console.log('car '+c.id+' has a edgeCarNumber of '+c.edgeCarNumber);
     }
 
     removeCar() {
         this.cars.shift();
         this.weight--;
+
+        // Since a car has been removed, the rest of the cars have moved one step closer to being the first car in the edge
         for (const car of this.cars) {
             car.edgeCarNumber--;
         }
