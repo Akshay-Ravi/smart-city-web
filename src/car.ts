@@ -27,6 +27,8 @@ export default class Car {
         turnRadiusZ: number
     }
 
+    static AverageTravelTime: number = 0;
+
     constructor(id: number,
         source: GraphNode,
         destination: GraphNode,
@@ -127,6 +129,16 @@ export default class Car {
 
                 this.endTime = new Date();
                 let travelTimeSeconds = (this.endTime.getTime() - this.startTime.getTime())/1000
+
+                // Calculate new average travel time
+                if (Car.AverageTravelTime == 0) {
+                    // If this is the first car that has reached its destination
+                    Car.AverageTravelTime = travelTimeSeconds
+                } else {
+                    Car.AverageTravelTime = (Car.AverageTravelTime + travelTimeSeconds)/2
+                }
+
+                document.getElementById('avgCount').innerText = ""+Car.AverageTravelTime.toFixed(3); // 3 digits after the decimal
             } else if (this.isVectorSame(this.mesh.position, this.edge.destination.pos.getVector3())) {
                 // If reached end of the edge, make the turn (Will be removed later as making turn
                 // will be called by the traffic controllers)

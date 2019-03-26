@@ -11,3 +11,25 @@ html, body {
     height  : 100%;
     touch-action: none;
 }
+
+#avgTravelTimeDiv {
+    position: absolute;
+    right: 50px;
+    top: 40px;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+}
+
+#avgTravelTimeDiv > #avgCount {
+    text-align: center;
+    margin-top:15px;
+    font-size: 45px;
+    font-weight: 100;
+}
+
+#avgTravelTimeDiv > #avgUnit {
+    text-align: center;
+    font-weight: 100;
+    margin-top: -5px;
+}
