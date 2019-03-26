@@ -13,6 +13,7 @@ export default class Car {
     startTime: Date
     endTime: Date
     isMoving: boolean
+    hasReachedDestination: boolean
     nextTurn: number
     nextEdge: Edge
     isPriority: boolean
@@ -34,6 +35,7 @@ export default class Car {
         startTime: Date,
         endTime: Date,
         isMoving: boolean,
+        hasReachedDestination,
         nextTurn: number,
         nextEdge: Edge,
         isPriority: boolean,
@@ -47,6 +49,7 @@ export default class Car {
             this.startTime = startTime;
             this.endTime = endTime;
             this.isMoving = isMoving;
+            this.hasReachedDestination = hasReachedDestination;
             this.nextTurn = nextTurn;
             this.nextEdge = nextEdge;
             this.isPriority = isPriority;
@@ -116,9 +119,17 @@ export default class Car {
                 this.nextTurn = constants.RELATIVE_DIRECTION.Right;
             }
 
-            // If reached end of the edge, make the turn (Will be removed later as making turn
-            // will be called by the traffic controllers)
-            if (this.isVectorSame(this.mesh.position, this.edge.destination.pos.getVector3())) {
+            if (this.isVectorSame(this.mesh.position, this.destination.pos.getVector3())) {
+                // If car has reached it's final destination, remove it and recalculate average travel time
+                this.hasReachedDestination = true;
+                this.mesh.dispose();
+                this.edge.removeCar();
+
+                this.endTime = new Date();
+                let travelTimeSeconds = (this.endTime.getTime() - this.startTime.getTime())/1000
+            } else if (this.isVectorSame(this.mesh.position, this.edge.destination.pos.getVector3())) {
+                // If reached end of the edge, make the turn (Will be removed later as making turn
+                // will be called by the traffic controllers)
                 this.makeTurn();
             }
         }
@@ -137,14 +148,11 @@ export default class Car {
             this.turnDetails.turnDegree = 0;
             this.edge.removeCar();
 
-            // // Tell cars behind it to start moving forward
+            // Tell cars behind it to start moving forward (edge.cars doesn't contain the turning car anymore
+            // so that check needn't be done)
             for (let car of this.edge.cars) {
-                if (car == this) {
-                    console.log("Car "+car.id+" is turning");
-                } else {
-                    if (!car.isMoving) {
-                        car.move();
-                    }
+                if (!car.isMoving) {
+                    car.move();
                 }
             }
         }

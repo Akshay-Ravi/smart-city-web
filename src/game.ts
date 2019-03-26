@@ -27,6 +27,7 @@ class Game {
     private _cityHeight: number
     private _roadWidth: number
 
+    private _cars: Array<Car>
     private _numberOfCars: number
     private _ticks: number
 
@@ -58,6 +59,7 @@ class Game {
         this._roadWidth = 2;
         this._numberOfCars = 0;
         this._ticks = 0;
+        this._cars = [];
     }
 
     createScene() : void {
@@ -150,7 +152,8 @@ class Game {
                         break;
                 }
                 
-                let car = new Car(this._numberOfCars, edge.source, destination, edge, 0, new Date(), null, true, constants.RELATIVE_DIRECTION.Red, null, false, mesh, this._scene);
+                let car = new Car(this._numberOfCars, edge.source, destination, edge, 0, new Date(), null, false, false, constants.RELATIVE_DIRECTION.Red, null, false, mesh, this._scene);
+                this._cars.push(car);
                 edge.addCar(car);
                 car.move();
                 this.addToShadow(mesh);
@@ -190,8 +193,17 @@ class Game {
         this._engine.runRenderLoop(() => {
             this._scene.render();
             this._ticks++;
-            if (this._ticks == 60) {
-                // console.log('one second over');
+            if (this._ticks == 6) {
+                // 1/10th of a second is over
+                this._cars.forEach(car => {
+                    if (car.hasReachedDestination) {
+                        // Remove car from array if it has reached it's destination
+                        this._cars.splice(this._cars.indexOf(car), 1);
+                    } else if (!car.isMoving) {
+                        // Update the idle times of all cars that are not moving
+                        car.idleTime += 0.1
+                    }
+                });
                 this._ticks = 0;
             }
         });
@@ -213,17 +225,17 @@ window.addEventListener('DOMContentLoaded', () => {
     // Start render loop.
     game.doRender();
 
-    // game.addCar(GAME_MAP.getEdge(7), null);
-    game.addCar(constants.GAME_MAP.getEdge(1), null);
+    game.addCar(constants.GAME_MAP.getEdge(1), constants.GAME_MAP.getNode(68));
 
     setTimeout(() => {
-        game.addCar(constants.GAME_MAP.getEdge(1), null);
+        game.addCar(constants.GAME_MAP.getEdge(1), constants.GAME_MAP.getNode(68));
     }, 2000);
 
     // game.addCar(GAME_MAP.getEdge(10), null);
     // game.addCar(GAME_MAP.getEdge(14), null);
     // game.addCar(GAME_MAP.getEdge(17), null);
     // game.addCar(GAME_MAP.getEdge(28), null);
+    // game.addCar(GAME_MAP.getEdge(7), null);
 
     // game.addCar(GAME_MAP.getEdge(2), null);
     // game.addCar(GAME_MAP.getEdge(3), null);
