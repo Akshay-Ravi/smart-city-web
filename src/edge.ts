@@ -22,12 +22,18 @@ export default class Edge {
 
     addCar(c: Car) {
         this.cars.push(c);
+        console.log(this.cars);
         this.weight++;
+        c.edgeCarNumber = this.weight
+        // console.log('car '+c.id+' has a edgeCarNumber of '+c.edgeCarNumber);
     }
 
     removeCar() {
         this.cars.shift();
         this.weight--;
+        for (const car of this.cars) {
+            car.edgeCarNumber--;
+        }
     }
 
     calcTotalIdleTime(): number {
