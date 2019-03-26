@@ -69,7 +69,7 @@ class Game {
         this._scene.clearColor = new BABYLON.Color4(0,0,0,1); // Set background color to black
 
         // Create the camera
-        this._camera = new BABYLON.ArcRotateCamera('maincamera', BABYLON.Tools.ToRadians(270), BABYLON.Tools.ToRadians(30), 22, new BABYLON.Vector3(0, 0, 0), this._scene);
+        this._camera = new BABYLON.ArcRotateCamera('maincamera', BABYLON.Tools.ToRadians(250), BABYLON.Tools.ToRadians(40), 18, new BABYLON.Vector3(-2, 0, -2), this._scene);
         this._camera.attachControl(this._canvas, false); // Attach the camera to the canvas to allow mouse movement
 
         // Create all light necessary for the scene
