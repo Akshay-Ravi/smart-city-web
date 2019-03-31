@@ -229,11 +229,21 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addCarButton').onclick = () => {
         let source: String = (document.getElementById('sourceDropdown') as HTMLSelectElement).value;
         let destn: String = (document.getElementById('destnDropdown') as HTMLSelectElement).value;
+        let errorElement: HTMLElement = document.getElementById('errorMessage');
         if (source == destn) {
-            document.getElementById('errorMessage').style.opacity = ""+1;
+            errorElement.innerText = "Source can not be same as destination";
+            errorElement.style.opacity = ""+1;
         } else {
-            document.getElementById('errorMessage').style.opacity = ""+0;
-            game.addCar(convertSourceToEdge(source), convertDestinationToNode(destn));
+            errorElement.style.opacity = ""+0;
+            let sourceEdge: Edge = convertSourceToEdge(source);
+            let destnNode: GraphNode = convertDestinationToNode(destn);
+            if (sourceEdge.isBlocked()) {
+                errorElement.innerText = "The chosen edge is blocked right now";
+                errorElement.style.opacity = ""+1;
+            } else {
+                errorElement.style.opacity = ""+0;
+                game.addCar(sourceEdge, destnNode);
+            }
         }
     }
 });

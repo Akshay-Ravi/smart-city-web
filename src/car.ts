@@ -134,6 +134,11 @@ export default class Car {
     }
 
     makeTurn() {
+        // Don't make the turn if the edge to turn to is blocked
+        if (this.nextEdge.isBlocked()) {
+            return;
+        }
+
         if (!this.turnDetails.isTurning) {
             this.turnDetails.isTurning = true;
             this.turnDetails.turnRadiusX = this.nextEdge.source.pos.x - this.mesh.position.x;
