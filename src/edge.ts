@@ -1,5 +1,6 @@
 import GraphNode from './node';
 import Car from './car';
+import * as constants from './constants'
 
 export default class Edge {
     id: number
@@ -9,6 +10,7 @@ export default class Edge {
     destination: GraphNode
     cars: Array<Car>
     direction: number
+    receivingCar: boolean
 
     constructor(id: number, weight: number, maxWeight: number, source: GraphNode, destn: GraphNode, direction: number) {
         this.id = id;
@@ -18,17 +20,33 @@ export default class Edge {
         this.destination = destn;
         this.cars = [];
         this.direction = direction;
+        this.receivingCar = false;
+
+        if (constants.GAME_GRAPH[this.source.graphID] == undefined) {
+            constants.GAME_GRAPH[this.source.graphID] = {};
+        }
+        constants.GAME_GRAPH[this.source.graphID][this.destination.graphID] = 2;
+
+        if (constants.GRAPH_TURNS[this.source.graphID] == undefined) {
+            constants.GRAPH_TURNS[this.source.graphID] = {};
+        }
+        constants.GRAPH_TURNS[this.source.graphID][this.destination.graphID] = this;
+
     }
 
     addCar(c: Car) {
         this.cars.push(c);
         this.weight++;
+        constants.GAME_GRAPH[this.source.graphID][this.destination.graphID]++;
+        this.receivingCar = false;
+
         c.edgeCarNumber = this.weight
     }
 
     removeCar() {
         this.cars.shift();
         this.weight--;
+        constants.GAME_GRAPH[this.source.graphID][this.destination.graphID]--;
 
         // Since a car has been removed, the rest of the cars have moved one step closer to being the first car in the edge
         for (const car of this.cars) {
@@ -58,6 +76,6 @@ export default class Edge {
             }
         }
 
-        return hasPriorityVehicle
+        return hasPriorityVehicle;
     }
 }

@@ -10,6 +10,8 @@ export const TURN_FRAMES_PER_MOVEMENT_RIGHT = 1; // Higher value reduces the tur
 export const TURN_FRAMES_PER_MOVEMENT_LEFT = 0.5; // Higher value reduces the turn speed for left turns
 export const TURN_DEGREE_CHANGE = 2; // Higher value increases the turn speed (MUST BE A FACTOR OF 90)
 export const CAR_WIDTH = 1.5 // Used to prevent collisions
+export const TRAFFIC_OPERATION_SHORT_WAIT_TIME = 500;
+export const TRAFFIC_OPERATION_LONG_WAIT_TIME = 3200;
 
 export const ABSOLUTE_DIRECTION = {
     North: 1,
@@ -24,6 +26,82 @@ export const RELATIVE_DIRECTION = {
     Right: 3,
     Red: 4
 }
+
+// The game map in graph form used to implement Dijkstras Algorithm. It's value is populated on creating edges.
+export const GAME_GRAPH = {}
+
+// Used to indicate absolute direction to go from a source graphnode to a destination graphnode
+export const GRAPH_TURNS = {};
+
+// All 11 possible traffic states
+export const TRAFFIC_STATES: Array<Array<number>> = [
+    [
+        RELATIVE_DIRECTION.Straight,
+        RELATIVE_DIRECTION.Red,
+        RELATIVE_DIRECTION.Straight,
+        RELATIVE_DIRECTION.Red
+    ],
+    [
+        RELATIVE_DIRECTION.Straight,
+        RELATIVE_DIRECTION.Red,
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Left
+    ],
+    [
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Straight,
+        RELATIVE_DIRECTION.Red
+    ],
+    [
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Right,
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Red
+    ],
+    [
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Red,
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Right
+    ],
+    [
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Straight,
+        RELATIVE_DIRECTION.Red,
+        RELATIVE_DIRECTION.Left
+    ],
+    [
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Left
+    ],
+    [
+        RELATIVE_DIRECTION.Right,
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Red,
+        RELATIVE_DIRECTION.Left
+    ],
+    [
+        RELATIVE_DIRECTION.Red,
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Straight
+    ],
+    [
+        RELATIVE_DIRECTION.Red,
+        RELATIVE_DIRECTION.Left,
+        RELATIVE_DIRECTION.Right,
+        RELATIVE_DIRECTION.Left
+    ],
+    [
+        RELATIVE_DIRECTION.Red,
+        RELATIVE_DIRECTION.Straight,
+        RELATIVE_DIRECTION.Red,
+        RELATIVE_DIRECTION.Straight
+    ]
+]
 
 // The single instance of the game map that will be used by all
 export const GAME_MAP = new Map();

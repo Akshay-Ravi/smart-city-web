@@ -106,21 +106,6 @@ export default class Car {
             // Car can no longer move (either due to collision or it reached the end of the edge)
             this.isMoving = false;
 
-            // A hardcoded paths for the cars to follow (Will be removed later)
-            if (this.edge.id == 1) {
-                this.nextEdge = constants.GAME_MAP.getEdge(24);
-                this.nextTurn = constants.RELATIVE_DIRECTION.Right;
-            } else if (this.edge.id == 24) {
-                this.nextEdge = constants.GAME_MAP.getEdge(25);
-                this.nextTurn = constants.RELATIVE_DIRECTION.Straight;
-            } else if (this.edge.id == 25) {
-                this.nextEdge = constants.GAME_MAP.getEdge(14);
-                this.nextTurn = constants.RELATIVE_DIRECTION.Left;
-            } else if (this.edge.id == 14) {
-                this.nextEdge = constants.GAME_MAP.getEdge(34);
-                this.nextTurn = constants.RELATIVE_DIRECTION.Right;
-            }
-
             if (this.isVectorSame(this.mesh.position, this.destination.pos.getVector3())) {
                 // If car has reached it's final destination, remove it and recalculate average travel time
                 this.hasReachedDestination = true;
@@ -142,14 +127,10 @@ export default class Car {
             } else if (this.isVectorSame(this.mesh.position, this.edge.destination.pos.getVector3())) {
                 // If reached end of the edge, make the turn (Will be removed later as making turn
                 // will be called by the traffic controllers)
-                this.makeTurn();
+                this.findNextTurnAndEdge();
+                // this.makeTurn();
             }
         }
-
-        // if (this.isMoving == false) {
-        //     this.idleTime += 0.1;
-        //     setTimeout(this.move, 100);
-        // }
     }
 
     makeTurn() {
@@ -234,7 +215,7 @@ export default class Car {
         let animation = this.scene.beginAnimation(this.mesh, 0, turnFrames, false);
         animation.waitAsync().then(x => {
             this.turnDetails.turnDegree += this.turnDetails.degreeChange;
-            if (this.turnDetails.turnDegree == 90) {
+            if (this.turnDetails.turnDegree == 90 || this.isVectorSame(this.mesh.position, this.nextEdge.source.pos.getVector3())) {
                 // Turn is complete
                 this.turnDetails.isTurning = false;
                 this.nextEdge.addCar(this);
@@ -247,6 +228,71 @@ export default class Car {
                 this.makeTurn();
             }
         })
+    }
+
+    // Dijkstra's Algorithm
+    findNextTurnAndEdge() {
+        const costs = {};
+        const parents = {};
+        const processed = [];
+
+        const lowestCostNode = (costs, processed) => {
+            return Object.keys(costs).reduce((lowest, node) => {
+                if (lowest === null || costs[node] < costs[lowest]) {
+                    if (!processed.includes(node)) {
+                        lowest = node;
+                    }
+                }
+                return lowest;
+            }, null);
+        };
+
+        const start: number = this.edge.destination.graphID
+        const finish: number = this.destination.graphID
+        costs[start] = 0;
+        costs[finish] = Infinity;
+        parents[finish] = null;
+
+        for (let child in constants.GAME_GRAPH[start]) {  // add children of start node
+            parents[child] = start;
+        }
+
+        let node = lowestCostNode(costs, processed);
+
+        while (node) {
+            let cost = costs[node];
+            let children = constants.GAME_GRAPH[node];
+
+            for (let n in children) {
+                let newCost = cost + children[n];
+
+                if (costs[n] == undefined) {
+                    costs[n] = newCost;
+                    parents[n] = node;
+                }
+
+                if (costs[n] > newCost) {
+                    costs[n] = newCost;
+                    parents[n] = node;
+                }
+            }
+
+            processed.push(node);
+            node = lowestCostNode(costs, processed);
+        }
+        
+        let optimalPath = [""+finish];
+        let parent = parents[finish];
+        while (parent) {
+            optimalPath.push(parent);
+            parent = parents[parent];
+        }
+        
+        optimalPath.reverse();  // reverse array to get correct order
+
+        let nextNode: number = Number.parseInt(optimalPath[1]);
+        this.nextEdge = constants.GRAPH_TURNS[this.edge.destination.graphID][nextNode]
+        this.nextTurn = this.getTurnDirection(this.edge.direction, this.nextEdge.direction);
     }
 
     isVectorSame(vec1: BABYLON.Vector3, vec2: BABYLON.Vector3): boolean {
@@ -288,5 +334,61 @@ export default class Car {
         }
         
         return destinationPosition.getVector3();
+    }
+
+    getTurnDirection(currentEdgeDirection: number, directionOfFutureEdge: number): number {
+        switch (currentEdgeDirection) {
+            case constants.ABSOLUTE_DIRECTION.North:
+                switch (directionOfFutureEdge) {
+                    case constants.ABSOLUTE_DIRECTION.North:
+                        return constants.RELATIVE_DIRECTION.Straight;
+                    case constants.ABSOLUTE_DIRECTION.East:
+                        return constants.RELATIVE_DIRECTION.Right;
+                    case constants.ABSOLUTE_DIRECTION.West:
+                        return constants.RELATIVE_DIRECTION.Left;
+                    default:
+                        console.log("Error, got a U Turn");
+                }
+                break;
+        
+            case constants.ABSOLUTE_DIRECTION.East:
+                switch (directionOfFutureEdge) {
+                    case constants.ABSOLUTE_DIRECTION.East:
+                        return constants.RELATIVE_DIRECTION.Straight;
+                    case constants.ABSOLUTE_DIRECTION.South:
+                        return constants.RELATIVE_DIRECTION.Right;
+                    case constants.ABSOLUTE_DIRECTION.North:
+                        return constants.RELATIVE_DIRECTION.Left;
+                    default:
+                        console.log("Error, got a U Turn");
+                }
+                break;
+
+            case constants.ABSOLUTE_DIRECTION.South:
+                switch (directionOfFutureEdge) {
+                    case constants.ABSOLUTE_DIRECTION.South:
+                        return constants.RELATIVE_DIRECTION.Straight;
+                    case constants.ABSOLUTE_DIRECTION.West:
+                        return constants.RELATIVE_DIRECTION.Right;
+                    case constants.ABSOLUTE_DIRECTION.East:
+                        return constants.RELATIVE_DIRECTION.Left;
+                    default:
+                        console.log("Error, got a U Turn");
+                }
+                break;
+
+            case constants.ABSOLUTE_DIRECTION.West:
+                switch (directionOfFutureEdge) {
+                    case constants.ABSOLUTE_DIRECTION.West:
+                        return constants.RELATIVE_DIRECTION.Straight;
+                    case constants.ABSOLUTE_DIRECTION.North:
+                        return constants.RELATIVE_DIRECTION.Right;
+                    case constants.ABSOLUTE_DIRECTION.South:
+                        return constants.RELATIVE_DIRECTION.Left;
+                    default:
+                        console.log("Error, got a U Turn");
+                }
+                break;
+        }
     }
 }

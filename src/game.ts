@@ -152,7 +152,7 @@ class Game {
                         break;
                 }
                 
-                let car = new Car(this._numberOfCars, edge.source, destination, edge, 0, new Date(), null, false, false, constants.RELATIVE_DIRECTION.Red, null, false, mesh, this._scene);
+                let car = new Car(this._numberOfCars, edge.source, destination, edge, 0, new Date(), null, false, false, null, null, false, mesh, this._scene);
                 this._cars.push(car);
                 edge.addCar(car);
                 car.move();
@@ -225,44 +225,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Start render loop.
     game.doRender();
 
-    game.addCar(constants.GAME_MAP.getEdge(1), constants.GAME_MAP.getNode(68));
-
-    setTimeout(() => {
-        game.addCar(constants.GAME_MAP.getEdge(1), constants.GAME_MAP.getNode(68));
-    }, 2000);
-
-    // game.addCar(GAME_MAP.getEdge(10), null);
-    // game.addCar(GAME_MAP.getEdge(14), null);
-    // game.addCar(GAME_MAP.getEdge(17), null);
-    // game.addCar(GAME_MAP.getEdge(28), null);
-    // game.addCar(GAME_MAP.getEdge(7), null);
-
-    // game.addCar(GAME_MAP.getEdge(2), null);
-    // game.addCar(GAME_MAP.getEdge(3), null);
-    // game.addCar(GAME_MAP.getEdge(4), null);
-    // game.addCar(GAME_MAP.getEdge(5), null);
-    // game.addCar(GAME_MAP.getEdge(6), null);
-    // game.addCar(GAME_MAP.getEdge(8), null);
-    // game.addCar(GAME_MAP.getEdge(9), null);
-    // game.addCar(GAME_MAP.getEdge(11), null);
-    // game.addCar(GAME_MAP.getEdge(12), null);
-    // game.addCar(GAME_MAP.getEdge(13), null);
-    // game.addCar(GAME_MAP.getEdge(15), null);
-    // game.addCar(GAME_MAP.getEdge(16), null);
-    // game.addCar(GAME_MAP.getEdge(18), null);
-    // game.addCar(GAME_MAP.getEdge(19), null);
-    // game.addCar(GAME_MAP.getEdge(20), null);
-    // game.addCar(GAME_MAP.getEdge(21), null);
-    // game.addCar(GAME_MAP.getEdge(22), null);
-    // game.addCar(GAME_MAP.getEdge(23), null);
-    // game.addCar(GAME_MAP.getEdge(24), null);
-    // game.addCar(GAME_MAP.getEdge(25), null);
-    // game.addCar(GAME_MAP.getEdge(26), null);
-    // game.addCar(GAME_MAP.getEdge(27), null);
-    // game.addCar(GAME_MAP.getEdge(29), null);
-    // game.addCar(GAME_MAP.getEdge(30), null);
-    // game.addCar(GAME_MAP.getEdge(31), null);
-    // game.addCar(GAME_MAP.getEdge(32), null);
-    // game.addCar(GAME_MAP.getEdge(33), null);
-    // game.addCar(GAME_MAP.getEdge(34), null);
+    game.addCar(constants.GAME_MAP.getEdge(1), constants.GAME_MAP.getNode(18));
+    // game.addCar(constants.GAME_MAP.getEdge(23), constants.GAME_MAP.getNode(30));
+    game.addCar(constants.GAME_MAP.getEdge(21), constants.GAME_MAP.getNode(37));
 });
