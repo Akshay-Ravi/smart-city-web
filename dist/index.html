@@ -17,8 +17,48 @@
             Seconds
         </div>
     </div>
+    <div id="addCarDiv">
+        <div class="addCarLocationDiv">
+            <select id="sourceDropdown" class="locationDropdown">
+                <option value="a">A</option>
+                <option value="b">B</option>
+                <option value="c">C</option>
+                <option value="d">D</option>
+                <option value="e">E</option>
+                <option value="f">F</option>
+                <option value="g">G</option>
+                <option value="h">H</option>
+                <option value="i">I</option>
+                <option value="j">J</option>
+            </select>
+            <div class="addCarLabel">
+                Source
+            </div>
+        </div>
+        <div class="addCarLocationDiv">
+            <select id="destnDropdown" class="locationDropdown">
+                <option value="a">A</option>
+                <option value="b">B</option>
+                <option value="c">C</option>
+                <option value="d">D</option>
+                <option value="e">E</option>
+                <option value="f">F</option>
+                <option value="g">G</option>
+                <option value="h">H</option>
+                <option value="i">I</option>
+                <option value="j">J</option>
+            </select>
+            <div class="addCarLabel">
+                Destination
+            </div>
+        </div>
+        <button id="addCarButton">
+            Add Car
+        </button>
+    </div>
+    <div id="errorMessage">Source can not be same as destination</div>
     <link rel="stylesheet" href="../css/base.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400" rel="stylesheet">
 </head>
 <body>
     <canvas id="renderCanvas"></canvas>

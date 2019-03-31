@@ -225,7 +225,65 @@ window.addEventListener('DOMContentLoaded', () => {
     // Start render loop.
     game.doRender();
 
-    game.addCar(constants.GAME_MAP.getEdge(1), constants.GAME_MAP.getNode(18));
-    // game.addCar(constants.GAME_MAP.getEdge(23), constants.GAME_MAP.getNode(30));
-    game.addCar(constants.GAME_MAP.getEdge(21), constants.GAME_MAP.getNode(37));
+    // Map add car to button
+    document.getElementById('addCarButton').onclick = () => {
+        let source: String = (document.getElementById('sourceDropdown') as HTMLSelectElement).value;
+        let destn: String = (document.getElementById('destnDropdown') as HTMLSelectElement).value;
+        if (source == destn) {
+            document.getElementById('errorMessage').style.opacity = ""+1;
+        } else {
+            document.getElementById('errorMessage').style.opacity = ""+0;
+            game.addCar(convertSourceToEdge(source), convertDestinationToNode(destn));
+        }
+    }
 });
+
+function convertSourceToEdge(source: String): Edge {
+    switch (source) {
+        case "a":
+            return constants.GAME_MAP.getEdge(1);
+        case "b":
+            return constants.GAME_MAP.getEdge(7);
+        case "c":
+            return constants.GAME_MAP.getEdge(13);
+        case "d":
+            return constants.GAME_MAP.getEdge(23);
+        case "e":
+            return constants.GAME_MAP.getEdge(19);
+        case "f":
+            return constants.GAME_MAP.getEdge(31);
+        case "g":
+            return constants.GAME_MAP.getEdge(27);
+        case "h":
+            return constants.GAME_MAP.getEdge(4);
+        case "i":
+            return constants.GAME_MAP.getEdge(10);
+        case "j":
+            return constants.GAME_MAP.getEdge(16);
+    }
+}
+
+function convertDestinationToNode(destn: String): GraphNode {
+    switch (destn) {
+        case "a":
+            return constants.GAME_MAP.getNode(7);
+        case "b":
+            return constants.GAME_MAP.getNode(19);
+        case "c":
+            return constants.GAME_MAP.getNode(31);
+        case "d":
+            return constants.GAME_MAP.getNode(37);
+        case "e":
+            return constants.GAME_MAP.getNode(52);
+        case "f":
+            return constants.GAME_MAP.getNode(53);
+        case "g":
+            return constants.GAME_MAP.getNode(68);
+        case "h":
+            return constants.GAME_MAP.getNode(6);
+        case "i":
+            return constants.GAME_MAP.getNode(18);
+        case "j":
+            return constants.GAME_MAP.getNode(30);
+    }
+}

@@ -33,3 +33,71 @@ html, body {
     font-weight: 100;
     margin-top: -5px;
 }
+
+#addCarDiv {
+    border: 1px white solid;
+    padding: 5px;
+    position: absolute;
+    right: 50px;
+    bottom: 40px;
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    
+    font-weight: 300;
+    text-align: center;
+}
+
+.locationDropdown {
+    display: block;
+    margin: auto;
+    height: 50px;
+    font-size: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    margin-bottom: 5px;
+}
+
+.addCarLabel {
+    font-weight: 300;
+    font-size: 20px;
+}
+
+.addCarLocationDiv {
+    display: inline-block;
+    margin: 10px;
+}
+
+#addCarButton {
+    display: block;
+    margin: auto;
+    font-size: 18px;
+    color: #494949 !important;
+    text-transform: uppercase;
+    background: #ffffff;
+    padding: 8px;
+    border: 2px solid #494949 !important;
+    border-radius: 10px;
+    transition: all 0.3s ease 0s;
+}
+
+#addCarButton:hover {
+    color: #ffffff !important;
+    background: #e45151;
+    border-color: white !important;
+    border-width: 2px !important;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+}
+
+#errorMessage {
+    position: absolute;
+    left: 5px;
+    top: 20px;
+    color: red;
+    font-family: 'Roboto', sans-serif;
+    font-size: 30px;
+    font-weight: 100;
+    width: 300px;
+    text-align: center;
+    opacity: 0;
+}
