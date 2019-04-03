@@ -23,6 +23,7 @@ class Game {
     private _horizontalRoads: Array<BABYLON.Mesh>
     private _verticalRoadHeight: number
     private _horizontalRoadHeight: number
+    private _labelHeight: number
     private _cityWidth: number
     private _cityHeight: number
     private _roadWidth: number
@@ -54,6 +55,7 @@ class Game {
         this._horizontalRoads = [];
         this._verticalRoadHeight = 0.01;
         this._horizontalRoadHeight = 0.02;
+        this._labelHeight = 0.03;
         this._cityWidth = 23;
         this._cityHeight = 16;
         this._roadWidth = 2;
@@ -80,35 +82,35 @@ class Game {
         ground.position.set(0,0,0);
         
         // Give ground a grass texture
-        var groundMaterial = new BABYLON.StandardMaterial("groundMaterial", this._scene);
-        var groundTexture = new BABYLON.Texture("../images/grass.jpg", this._scene);
+        let groundMaterial = new BABYLON.StandardMaterial("groundMaterial", this._scene);
+        let groundTexture = new BABYLON.Texture("../images/grass.jpg", this._scene);
         groundTexture.uScale = this._cityWidth;
         groundTexture.vScale = this._cityHeight;
         groundMaterial.diffuseTexture = groundTexture;
         ground.material = groundMaterial;
 
         // Create the road texture for assigning to the road meshes later
-        var roadMaterial = new BABYLON.StandardMaterial("roadMaterial", this._scene);
+        let roadMaterial = new BABYLON.StandardMaterial("roadMaterial", this._scene);
         roadMaterial.diffuseTexture = new BABYLON.Texture("../images/road.png", this._scene);
         
         // CREATE ALL ROADS
-        var road1 = BABYLON.MeshBuilder.CreatePlane("road1", {width: this._roadWidth, height: this._cityHeight}, this._scene);
+        let road1 = BABYLON.MeshBuilder.CreatePlane("road1", {width: this._roadWidth, height: this._cityHeight}, this._scene);
         road1.position.set(0,this._verticalRoadHeight,0);
         this._verticalRoads.push(road1);
 
-        var road2 = BABYLON.MeshBuilder.CreatePlane("road2", {width: this._roadWidth, height: this._cityHeight}, this._scene);
+        let road2 = BABYLON.MeshBuilder.CreatePlane("road2", {width: this._roadWidth, height: this._cityHeight}, this._scene);
         road2.position.set(-6,this._verticalRoadHeight,0);
         this._verticalRoads.push(road2);
 
-        var road3 = BABYLON.MeshBuilder.CreatePlane("road3", {width: this._roadWidth, height: this._cityHeight}, this._scene);
+        let road3 = BABYLON.MeshBuilder.CreatePlane("road3", {width: this._roadWidth, height: this._cityHeight}, this._scene);
         road3.position.set(6,this._verticalRoadHeight,0);
         this._verticalRoads.push(road3);
 
-        var road4 = BABYLON.MeshBuilder.CreatePlane("road4", {width: this._roadWidth, height: this._cityWidth}, this._scene);
+        let road4 = BABYLON.MeshBuilder.CreatePlane("road4", {width: this._roadWidth, height: this._cityWidth}, this._scene);
         road4.position.set(0,this._horizontalRoadHeight,-3);
         this._horizontalRoads.push(road4);
 
-        var road5 = BABYLON.MeshBuilder.CreatePlane("road5", {width: this._roadWidth, height: this._cityWidth}, this._scene);
+        let road5 = BABYLON.MeshBuilder.CreatePlane("road5", {width: this._roadWidth, height: this._cityWidth}, this._scene);
         road5.position.set(0,this._horizontalRoadHeight,3);
         this._horizontalRoads.push(road5);
         
@@ -124,6 +126,50 @@ class Game {
             road.rotate(new BABYLON.Vector3(1,0,0), BABYLON.Tools.ToRadians(90));
         });
 
+        // Add road labels
+        let labelPositions = [
+            [-6, -(this._cityHeight - constants.LABEL_SIZE)/2],
+            [0, -(this._cityHeight - constants.LABEL_SIZE)/2],
+            [6, -(this._cityHeight - constants.LABEL_SIZE)/2],
+            [-(this._cityWidth - constants.LABEL_SIZE)/2, -3],
+            [(this._cityWidth - constants.LABEL_SIZE)/2, -3],
+            [-(this._cityWidth - constants.LABEL_SIZE)/2, 3],
+            [(this._cityWidth - constants.LABEL_SIZE)/2, 3],
+            [-6, (this._cityHeight - constants.LABEL_SIZE)/2],
+            [0, (this._cityHeight - constants.LABEL_SIZE)/2],
+            [6, (this._cityHeight - constants.LABEL_SIZE)/2],
+        ]
+
+        let labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+        for (let i=0;i<labelPositions.length;i++) {
+            let plane = BABYLON.MeshBuilder.CreatePlane("label", {size: constants.LABEL_SIZE}, this._scene);
+            plane.position.set(labelPositions[i][0],this._labelHeight,labelPositions[i][1]);
+            plane.rotate(new BABYLON.Vector3(1,0,0), BABYLON.Tools.ToRadians(90));
+
+            let dynamicTexture = new BABYLON.DynamicTexture("dynamicTexture", {width:256, height:256}, this._scene, false);
+            dynamicTexture.drawText(labels[i], 64, 200, "bold 180px Arial","white","");
+            let planeMaterial = new BABYLON.StandardMaterial("labelMaterial"+i, this._scene);
+            planeMaterial.diffuseTexture = dynamicTexture;
+            planeMaterial.diffuseTexture.hasAlpha = true;
+            plane.material = planeMaterial;
+
+            switch (i) {
+                case 3:
+                case 5:
+                    plane.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(270));
+                    break;
+                case 4:
+                case 6:
+                    plane.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(90));
+                    break;
+                case 7:
+                case 8:
+                case 9:
+                    plane.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(180));
+                    break;
+            }
+        }
+        
         this.generateShadows(ground);
 
     }
@@ -229,24 +275,33 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addCarButton').onclick = () => {
         let source: String = (document.getElementById('sourceDropdown') as HTMLSelectElement).value;
         let destn: String = (document.getElementById('destnDropdown') as HTMLSelectElement).value;
-        let errorElement: HTMLElement = document.getElementById('errorMessage');
-        if (source == destn) {
-            errorElement.innerText = "Source can not be same as destination";
+        addCar(game, source, destn);
+    }
+
+    addCar(game, "a", "b");
+    addCar(game, "a", "c");
+    addCar(game, "c", "a");
+    addCar(game, "c", "b");
+});
+
+function addCar(game: Game, source: String, destination: String) {
+    let errorElement: HTMLElement = document.getElementById('errorMessage');
+    if (source == destination) {
+        errorElement.innerText = "Source can not be same as destination";
+        errorElement.style.opacity = ""+1;
+    } else {
+        errorElement.style.opacity = ""+0;
+        let sourceEdge: Edge = convertSourceToEdge(source);
+        let destnNode: GraphNode = convertDestinationToNode(destination);
+        if (sourceEdge.isBlocked()) {
+            errorElement.innerText = "The chosen edge is blocked right now";
             errorElement.style.opacity = ""+1;
         } else {
             errorElement.style.opacity = ""+0;
-            let sourceEdge: Edge = convertSourceToEdge(source);
-            let destnNode: GraphNode = convertDestinationToNode(destn);
-            if (sourceEdge.isBlocked()) {
-                errorElement.innerText = "The chosen edge is blocked right now";
-                errorElement.style.opacity = ""+1;
-            } else {
-                errorElement.style.opacity = ""+0;
-                game.addCar(sourceEdge, destnNode);
-            }
+            game.addCar(sourceEdge, destnNode);
         }
     }
-});
+}
 
 function convertSourceToEdge(source: String): Edge {
     switch (source) {

@@ -12,6 +12,7 @@ export const TURN_DEGREE_CHANGE = 2; // Higher value increases the turn speed (M
 export const CAR_WIDTH = 1.5 // Used to prevent collisions
 export const TRAFFIC_OPERATION_SHORT_WAIT_TIME = 500;
 export const TRAFFIC_OPERATION_LONG_WAIT_TIME = 3200;
+export const LABEL_SIZE = 1;
 
 export const ABSOLUTE_DIRECTION = {
     North: 1,
