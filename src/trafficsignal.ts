@@ -62,31 +62,56 @@ export default class TrafficSignal {
         this.determineTrafficState();
         
         let nextOperateCall: number = constants.TRAFFIC_OPERATION_SHORT_WAIT_TIME;
-        if (this.edges[0].weight > 0 && this.state.North == this.edges[0].cars[0].nextTurn) {
-            if (!this.edges[0].cars[0].nextEdge.receivingCar) {
-                this.edges[0].cars[0].nextEdge.receivingCar = true;
-                this.edges[0].cars[0].makeTurn();
-            }
-        }
-
-        if (this.edges[1].weight > 0 && this.state.East == this.edges[1].cars[0].nextTurn) {
-            if (!this.edges[1].cars[0].nextEdge.receivingCar) {
-                this.edges[1].cars[0].nextEdge.receivingCar = true;
-                this.edges[1].cars[0].makeTurn();
-            }
-        }
-        
-        if (this.edges[2].weight > 0 && this.state.South == this.edges[2].cars[0].nextTurn) {
-            if (!this.edges[2].cars[0].nextEdge.receivingCar) {
-                this.edges[2].cars[0].nextEdge.receivingCar = true;
-                this.edges[2].cars[0].makeTurn();
-            }
-        }
-        
-        if (this.edges[3].weight > 0 && this.state.West == this.edges[3].cars[0].nextTurn) {
-            if (!this.edges[3].cars[0].nextEdge.receivingCar) {
-                this.edges[3].cars[0].nextEdge.receivingCar = true;
-                this.edges[3].cars[0].makeTurn();
+        let callBack: () => void;
+        for (let i = 0; i < 4; i++) {
+            let states = [this.state.North, this.state.East, this.state.South, this.state.West];
+            if (this.edges[i].weight > 0 && states[i] == this.edges[i].cars[0].nextTurn && (this.getDontSendCarValue(this.edges[i], this.edges[i].cars[0].nextTurn) == 0)) {
+                switch (this.edges[i].cars[0].nextTurn) {
+                    case constants.RELATIVE_DIRECTION.Left:
+                        this.edges[(i+2)%4].dontSendCar.right++;
+                        this.edges[(i+3)%4].dontSendCar.straight++;
+                        callBack = () => {
+                            this.edges[(i+2)%4].dontSendCar.right--;
+                            this.edges[(i+3)%4].dontSendCar.straight--;
+                        }
+                        break;
+                
+                    case constants.RELATIVE_DIRECTION.Straight:
+                        this.edges[(i+1)%4].dontSendCar.left++;
+                        this.edges[(i+1)%4].dontSendCar.right++;
+                        this.edges[(i+1)%4].dontSendCar.straight++;
+                        this.edges[(i+2)%4].dontSendCar.right++;
+                        this.edges[(i+3)%4].dontSendCar.right++;
+                        this.edges[(i+3)%4].dontSendCar.straight++;
+                        callBack = () => {
+                            this.edges[(i+1)%4].dontSendCar.left--;
+                            this.edges[(i+1)%4].dontSendCar.right--;
+                            this.edges[(i+1)%4].dontSendCar.straight--;
+                            this.edges[(i+2)%4].dontSendCar.right--;
+                            this.edges[(i+3)%4].dontSendCar.right--;
+                            this.edges[(i+3)%4].dontSendCar.straight--;
+                        }
+                        break;
+                    
+                    case constants.RELATIVE_DIRECTION.Right:
+                        this.edges[(i+1)%4].dontSendCar.right++;
+                        this.edges[(i+1)%4].dontSendCar.straight++;
+                        this.edges[(i+2)%4].dontSendCar.left++;
+                        this.edges[(i+2)%4].dontSendCar.right++;
+                        this.edges[(i+2)%4].dontSendCar.straight++;
+                        this.edges[(i+3)%4].dontSendCar.right++;
+                        this.edges[(i+3)%4].dontSendCar.straight++;
+                        callBack = () => {
+                            this.edges[(i+1)%4].dontSendCar.right--;
+                            this.edges[(i+1)%4].dontSendCar.straight--;
+                            this.edges[(i+2)%4].dontSendCar.left--;
+                            this.edges[(i+2)%4].dontSendCar.right--;
+                            this.edges[(i+2)%4].dontSendCar.straight--;
+                            this.edges[(i+3)%4].dontSendCar.right--;
+                            this.edges[(i+3)%4].dontSendCar.straight--;
+                        }
+                }
+                this.edges[i].cars[0].makeTurn(callBack);
             }
         }
 
@@ -94,6 +119,17 @@ export default class TrafficSignal {
         setTimeout(() => {
             this.operate();
         }, nextOperateCall);
+    }
+
+    getDontSendCarValue(edge: Edge, direction: number): number {
+        switch (direction) {
+            case constants.RELATIVE_DIRECTION.Left:
+                return edge.dontSendCar.left
+            case constants.RELATIVE_DIRECTION.Right:
+                return edge.dontSendCar.right
+            case constants.RELATIVE_DIRECTION.Straight:
+                return edge.dontSendCar.straight
+        }
     }
 
     findPriorityOrder() {

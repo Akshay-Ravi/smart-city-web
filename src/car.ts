@@ -125,21 +125,18 @@ export default class Car {
 
                 document.getElementById('avgCount').innerText = ""+Car.AverageTravelTime.toFixed(3); // 3 digits after the decimal
             } else if (this.isVectorSame(this.mesh.position, this.edge.destination.pos.getVector3())) {
-                // If reached end of the edge, make the turn (Will be removed later as making turn
-                // will be called by the traffic controllers)
+                // If reached end of the edge, find the next location to move to
                 this.findNextTurnAndEdge();
-                // this.makeTurn();
             }
         }
     }
 
-    makeTurn() {
-        // Don't make the turn if the edge to turn to is blocked
-        if (this.nextEdge.isBlocked()) {
-            return;
-        }
-
+    makeTurn(clearDontSendCarValuesCallback: () => void) {
         if (!this.turnDetails.isTurning) {
+            // Don't make the turn if the edge to turn to is blocked
+            if (this.nextEdge.isBlocked()) {
+                return;
+            }
             this.turnDetails.isTurning = true;
             this.turnDetails.turnRadiusX = this.nextEdge.source.pos.x - this.mesh.position.x;
             this.turnDetails.turnRadiusZ = this.nextEdge.source.pos.z - this.mesh.position.z;
@@ -222,6 +219,7 @@ export default class Car {
             this.turnDetails.turnDegree += this.turnDetails.degreeChange;
             if (this.turnDetails.turnDegree == 90 || this.isVectorSame(this.mesh.position, this.nextEdge.source.pos.getVector3())) {
                 // Turn is complete
+                clearDontSendCarValuesCallback();
                 this.turnDetails.isTurning = false;
                 this.nextEdge.addCar(this);
                 this.edge = this.nextEdge;
@@ -230,7 +228,7 @@ export default class Car {
                 this.move();
             } else {
                 // Turn not complete, continue turning
-                this.makeTurn();
+                this.makeTurn(clearDontSendCarValuesCallback);
             }
         })
     }

@@ -103,3 +103,14 @@ html, body {
     text-align: center;
     opacity: 0;
 }
+
+#priorityBox {
+    margin-bottom: 10px;
+    margin-right: 3px;
+    font-size: 30px;
+}
+
+#priorityBox ~ p {
+    margin: 0px;
+    display: inline-block;
+}

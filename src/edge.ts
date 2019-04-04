@@ -11,6 +11,11 @@ export default class Edge {
     cars: Array<Car>
     direction: number
     receivingCar: boolean
+    dontSendCar: {
+        straight: number,
+        left: number,
+        right: number
+    }
 
     constructor(id: number, weight: number, maxWeight: number, source: GraphNode, destn: GraphNode, direction: number) {
         this.id = id;
@@ -21,6 +26,11 @@ export default class Edge {
         this.cars = [];
         this.direction = direction;
         this.receivingCar = false;
+        this.dontSendCar = {
+            straight: 0,
+            left: 0,
+            right: 0
+        };
 
         if (constants.GAME_GRAPH[this.source.graphID] == undefined) {
             constants.GAME_GRAPH[this.source.graphID] = {};

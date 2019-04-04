@@ -174,7 +174,7 @@ class Game {
 
     }
 
-    addCar(edge: Edge, destination: GraphNode): void {
+    addCar(edge: Edge, destination: GraphNode, isPriority: boolean): void {
         this._numberOfCars++;
 
         BABYLON.SceneLoader.ImportMesh("", "../images/cars/Babylon/", "SportsCar.babylon", this._scene, (newmeshes) => {
@@ -198,7 +198,7 @@ class Game {
                         break;
                 }
                 
-                let car = new Car(this._numberOfCars, edge.source, destination, edge, 0, new Date(), null, false, false, null, null, false, mesh, this._scene);
+                let car = new Car(this._numberOfCars, edge.source, destination, edge, 0, new Date(), null, false, false, null, null, isPriority, mesh, this._scene);
                 this._cars.push(car);
                 edge.addCar(car);
                 car.move();
@@ -275,16 +275,20 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('addCarButton').onclick = () => {
         let source: String = (document.getElementById('sourceDropdown') as HTMLSelectElement).value;
         let destn: String = (document.getElementById('destnDropdown') as HTMLSelectElement).value;
-        addCar(game, source, destn);
+        let isPriority: boolean = (document.getElementById('priorityBox') as HTMLInputElement).checked;
+        addCar(game, source, destn, isPriority);
     }
 
-    addCar(game, "a", "b");
-    addCar(game, "a", "c");
-    addCar(game, "c", "a");
-    addCar(game, "c", "b");
+    addCar(game, "a", "b", false);
+    addCar(game, "c", "b", false);
+    addCar(game, "d", "b", true);
+    addCar(game, "e", "b", false);
+    addCar(game, "i", "d", false);
+    addCar(game, "h", "g", false);
+    addCar(game, "j", "e", false);
 });
 
-function addCar(game: Game, source: String, destination: String) {
+function addCar(game: Game, source: String, destination: String, isPriority: boolean) {
     let errorElement: HTMLElement = document.getElementById('errorMessage');
     if (source == destination) {
         errorElement.innerText = "Source can not be same as destination";
@@ -298,7 +302,7 @@ function addCar(game: Game, source: String, destination: String) {
             errorElement.style.opacity = ""+1;
         } else {
             errorElement.style.opacity = ""+0;
-            game.addCar(sourceEdge, destnNode);
+            game.addCar(sourceEdge, destnNode, isPriority);
         }
     }
 }

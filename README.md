@@ -44,4 +44,4 @@ python -m "SimpleHTTPServer"
 7. Open Google Chrome and visit *localhost:8000/dist*
 
 ### To Do/Bugs to iron out
-1. Determine how often traffic signals should operate, and how certain edges can be blocked, to prevent overlapping of cars in the signal intersections.
+1. Under certain conditions (lots of cars), cars just stop moving at a signal, or there could be a miscalculation of its edgeCarNumber value.
