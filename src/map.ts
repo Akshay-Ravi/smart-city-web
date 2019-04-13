@@ -7,7 +7,6 @@ import * as constants from './constants';
 export default class Map {
     edges: Array<Edge>
     nodes: Array<GraphNode>
-    trafficSignals: Array<TrafficSignal>
 
     constructor() {
         this.nodes = [
@@ -130,15 +129,6 @@ export default class Map {
             new Edge(33, constants.INITIAL_WEIGHT, constants.MAX_WEIGHT, this.getNode(65), this.getNode(66), constants.ABSOLUTE_DIRECTION.East),
             new Edge(34, constants.INITIAL_WEIGHT, constants.MAX_WEIGHT, this.getNode(67), this.getNode(68), constants.ABSOLUTE_DIRECTION.East),
         ]
-
-        this.trafficSignals = [
-            new TrafficSignal(1, [this.getEdge(5), this.getEdge(21), this.getEdge(1), this.getEdge(23)]),
-            new TrafficSignal(2, [this.getEdge(4), this.getEdge(29), this.getEdge(2), this.getEdge(31)]),
-            new TrafficSignal(3, [this.getEdge(11), this.getEdge(20), this.getEdge(7), this.getEdge(24)]),
-            new TrafficSignal(4, [this.getEdge(10), this.getEdge(28), this.getEdge(8), this.getEdge(32)]),
-            new TrafficSignal(5, [this.getEdge(17), this.getEdge(19), this.getEdge(13), this.getEdge(25)]),
-            new TrafficSignal(6, [this.getEdge(16), this.getEdge(27), this.getEdge(14), this.getEdge(33)]),
-        ]
     }
 
     getNode(id: number): GraphNode {
@@ -147,9 +137,5 @@ export default class Map {
 
     getEdge(id: number): Edge {
         return this.edges[id-1];
-    }
-
-    getTrafficSignal(id: number): TrafficSignal {
-        return this.trafficSignals[id-1];
     }
 }

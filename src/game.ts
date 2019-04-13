@@ -2,6 +2,7 @@ import Edge from './edge';
 import Car from './car';
 import * as constants from './constants';
 import GraphNode from './node';
+import TrafficSignal from './trafficsignal';
 
 class Game {
     private _canvas: HTMLCanvasElement;
@@ -31,6 +32,8 @@ class Game {
     private _cars: Array<Car>
     private _numberOfCars: number
     private _ticks: number
+
+    private _trafficSignals: Array<TrafficSignal>
 
     constructor(canvasElement : string) {
 
@@ -74,15 +77,14 @@ class Game {
         this._camera = new BABYLON.ArcRotateCamera('maincamera', BABYLON.Tools.ToRadians(250), BABYLON.Tools.ToRadians(40), 18, new BABYLON.Vector3(-2, 0, -2), this._scene);
         this._camera.attachControl(this._canvas, false); // Attach the camera to the canvas to allow mouse movement
 
-        // Create all light necessary for the scene
-        this.createLight();
-
         // Create a built-in "ground" shape.
         let ground = BABYLON.MeshBuilder.CreateGround('ground1', {width: this._cityWidth, height: this._cityHeight, subdivisions: 1}, this._scene);
         ground.position.set(0,0,0);
         
         // Give ground a grass texture
         let groundMaterial = new BABYLON.StandardMaterial("groundMaterial", this._scene);
+        groundMaterial.maxSimultaneousLights = 2; // Only let the ground reflect the environmental lights, not the traffic lights
+
         let groundTexture = new BABYLON.Texture("../images/grass.jpg", this._scene);
         groundTexture.uScale = this._cityWidth;
         groundTexture.vScale = this._cityHeight;
@@ -169,8 +171,19 @@ class Game {
                     break;
             }
         }
-        
-        this.generateShadows(ground);
+
+        // Add the traffic signals and have them start operating
+        this._trafficSignals = [
+            new TrafficSignal(1, [constants.GAME_MAP.getEdge(5), constants.GAME_MAP.getEdge(21), constants.GAME_MAP.getEdge(1), constants.GAME_MAP.getEdge(23)], this._scene, new BABYLON.Vector2(-6, -3)),
+            new TrafficSignal(2, [constants.GAME_MAP.getEdge(4), constants.GAME_MAP.getEdge(29), constants.GAME_MAP.getEdge(2), constants.GAME_MAP.getEdge(31)], this._scene, new BABYLON.Vector2(-6, 3)),
+            new TrafficSignal(3, [constants.GAME_MAP.getEdge(11), constants.GAME_MAP.getEdge(20), constants.GAME_MAP.getEdge(7), constants.GAME_MAP.getEdge(24)], this._scene, new BABYLON.Vector2(0, -3)),
+            new TrafficSignal(4, [constants.GAME_MAP.getEdge(10), constants.GAME_MAP.getEdge(28), constants.GAME_MAP.getEdge(8), constants.GAME_MAP.getEdge(32)], this._scene, new BABYLON.Vector2(0, 3)),
+            new TrafficSignal(5, [constants.GAME_MAP.getEdge(17), constants.GAME_MAP.getEdge(19), constants.GAME_MAP.getEdge(13), constants.GAME_MAP.getEdge(25)], this._scene, new BABYLON.Vector2(6, -3)),
+            new TrafficSignal(6, [constants.GAME_MAP.getEdge(16), constants.GAME_MAP.getEdge(27), constants.GAME_MAP.getEdge(14), constants.GAME_MAP.getEdge(33)], this._scene, new BABYLON.Vector2(6, 3)),
+        ]
+
+        // Create all light necessary for the scene
+        this.createLight();
 
     }
 
@@ -202,7 +215,6 @@ class Game {
                 this._cars.push(car);
                 edge.addCar(car);
                 car.move();
-                this.addToShadow(mesh);
             });
         });
     }
@@ -216,22 +228,6 @@ class Game {
         // Ambient Light is of type Hemispheric Light
         this._ambientLight.light = new BABYLON.HemisphericLight("ambientlight", this._ambientLight.direction, this._scene);
         this._ambientLight.light.intensity = this._ambientLight.intensity;
-    }
-
-    generateShadows(ground: BABYLON.Mesh, ...items: BABYLON.AbstractMesh[]): void {
-        let shadowGenerator = new BABYLON.ShadowGenerator(512, this._directionalLight.light);
-        items.forEach(item => {
-            shadowGenerator.getShadowMap().renderList.push(item)
-        });
-
-        ground.receiveShadows = true;
-    }
-
-    addToShadow(...items: BABYLON.AbstractMesh[]): void {
-        let shadowGenerator = new BABYLON.ShadowGenerator(512, this._directionalLight.light);
-        items.forEach(item => {
-            shadowGenerator.getShadowMap().renderList.push(item)
-        });
     }
 
     doRender() : void {

@@ -104,5 +104,15 @@ export const TRAFFIC_STATES: Array<Array<number>> = [
     ]
 ]
 
+export const RED_LIGHT_HEIGHT = 2.6;
+export const GREEN_STRAIGHT_HEIGHT = 2.2;
+export const GREEN_LEFT_HEIGHT = 1.8;
+export const GREEN_RIGHT_HEIGHT = 1.4;
+export const TRAFFIC_HEIGHT = 2;
+export const TRAFFIC_ANGLE = BABYLON.Tools.ToRadians(10);
+export const TRAFFIC_EXPONENT = 100;
+
+export const OPERATE_OLD_MODE = false;
+
 // The single instance of the game map that will be used by all
 export const GAME_MAP = new Map();

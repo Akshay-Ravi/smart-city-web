@@ -44,4 +44,5 @@ python -m "SimpleHTTPServer"
 7. Open Google Chrome and visit *localhost:8000/dist*
 
 ### To Do/Bugs to iron out
-1. Under certain conditions (lots of cars), cars just stop moving at a signal, or there could be a miscalculation of its edgeCarNumber value.
+1. Traffic Signals max lights increase
+2. Implement Base Paper
