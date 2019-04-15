@@ -120,6 +120,10 @@ export default class Car {
                 Car.numberOfCars++;
                 Car.AverageTravelTime = ((Car.AverageTravelTime*(Car.numberOfCars-1)) + travelTimeSeconds)/Car.numberOfCars
 
+                if (this.isPriority) {
+                    console.log("Priority car "+this.id+" travel time - "+travelTimeSeconds);
+                }
+                
                 document.getElementById('avgCount').innerText = ""+Car.AverageTravelTime.toFixed(3); // 3 digits after the decimal
             } else if (this.isVectorSame(this.mesh.position, this.edge.destination.pos.getVector3())) {
                 // If reached end of the edge, find the next location to move to
