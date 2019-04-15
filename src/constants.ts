@@ -112,7 +112,7 @@ export const TRAFFIC_HEIGHT = 2;
 export const TRAFFIC_ANGLE = BABYLON.Tools.ToRadians(10);
 export const TRAFFIC_EXPONENT = 100;
 
-export const OPERATE_OLD_MODE = false;
+export const OPERATE_OLD_MODE = false; //pretimed signal change control
 export const PRETIMED_LENGTH = 1000;
 
 export const STANDARD_TURN_VECTOR = new BABYLON.Vector3(0, 0, 1);

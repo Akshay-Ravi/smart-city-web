@@ -120,7 +120,7 @@ export default class Car {
                 Car.numberOfCars++;
                 Car.AverageTravelTime = ((Car.AverageTravelTime*(Car.numberOfCars-1)) + travelTimeSeconds)/Car.numberOfCars
 
-                if (this.isPriority) {
+                if (this.id == 8) {
                     console.log("Priority car "+this.id+" travel time - "+travelTimeSeconds);
                 }
                 

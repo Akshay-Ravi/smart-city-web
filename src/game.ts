@@ -307,27 +307,27 @@ window.addEventListener('DOMContentLoaded', () => {
     // addCar(game, "j", "d", false);
 
     // Congestion
-    addCar(game, "d", "e", false);
-    setTimeout(() => {
-        addCar(game, "d", "e", false);
-    }, 3000);
+    // addCar(game, "d", "e", false);
+    // setTimeout(() => {
+    //     addCar(game, "d", "e", false);
+    // }, 3000);
 
-    addCar(game, "e", "d", false);
-    setTimeout(() => {
-        addCar(game, "e", "d", false);
-    }, 3000);
+    // addCar(game, "e", "d", false);
+    // setTimeout(() => {
+    //     addCar(game, "e", "d", false);
+    // }, 3000);
 
-    addCar(game, "i", "b", false);
-    setTimeout(() => {
-        addCar(game, "i", "b", false);
-    }, 3000);
+    // addCar(game, "i", "b", false);
+    // setTimeout(() => {
+    //     addCar(game, "i", "b", false);
+    // }, 3000);
 
-    setTimeout(() => {
-        addCar(game, "b", "i", false);
-    }, 7000);
-    setTimeout(() => {
-        addCar(game, "b", "i", false);
-    }, 10000);
+    // setTimeout(() => {
+    //     addCar(game, "b", "i", false);
+    // }, 7000);
+    // setTimeout(() => {
+    //     addCar(game, "b", "i", false);
+    // }, 10000);
 });
 
 function addCar(game: Game, source: String, destination: String, isPriority: boolean) {
