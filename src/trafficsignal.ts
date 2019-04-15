@@ -118,17 +118,17 @@ export default class TrafficSignal {
             this.currentGreenForPretimed = (this.currentGreenForPretimed+1)%4;
         } else {
             this.findPriorityOrder();
-    
-            // Prioritize edges with a priority vehicle
-            for (let i=0;i<4;i++) {
-                if (this.edges[this.priorityOrder[i]].hasPriorityVehicle()) {
-                    this.prioritizeEdge(i);
-                }
-            }
-    
+
             // Prioritize edges that are blocked
             for (let i=0;i<4;i++) {
                 if (this.edges[this.priorityOrder[i]].isBlocked()) {
+                    this.prioritizeEdge(i);
+                }
+            }
+
+            // Prioritize edges with a priority vehicle
+            for (let i=0;i<4;i++) {
+                if (this.edges[this.priorityOrder[i]].hasPriorityVehicle()) {
                     this.prioritizeEdge(i);
                 }
             }
@@ -271,7 +271,7 @@ export default class TrafficSignal {
                 viableTrafficStates[0][i] = constants.RELATIVE_DIRECTION.Red
             }
         }
-        
+
         this.state.North = viableTrafficStates[0][0];
         this.state.East = viableTrafficStates[0][1];
         this.state.South = viableTrafficStates[0][2];
