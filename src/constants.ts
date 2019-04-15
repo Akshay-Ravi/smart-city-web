@@ -113,6 +113,7 @@ export const TRAFFIC_ANGLE = BABYLON.Tools.ToRadians(10);
 export const TRAFFIC_EXPONENT = 100;
 
 export const OPERATE_OLD_MODE = false;
+export const PRETIMED_LENGTH = 1000;
 
 // The single instance of the game map that will be used by all
 export const GAME_MAP = new Map();

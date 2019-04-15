@@ -71,10 +71,10 @@ class Game {
 
         // Create a basic BJS Scene object.
         this._scene = new BABYLON.Scene(this._engine);
-        this._scene.clearColor = new BABYLON.Color4(0,0,0,1); // Set background color to black
+        this._scene.clearColor = new BABYLON.Color4(0.133,0.502,0.698,1); // Set background color to blue
 
         // Create the camera
-        this._camera = new BABYLON.ArcRotateCamera('maincamera', BABYLON.Tools.ToRadians(250), BABYLON.Tools.ToRadians(40), 18, new BABYLON.Vector3(-2, 0, -2), this._scene);
+        this._camera = new BABYLON.ArcRotateCamera('maincamera', BABYLON.Tools.ToRadians(230), BABYLON.Tools.ToRadians(45), 18, new BABYLON.Vector3(-2, 0, -2), this._scene);
         this._camera.attachControl(this._canvas, false); // Attach the camera to the canvas to allow mouse movement
 
         // Create a built-in "ground" shape.
@@ -275,13 +275,13 @@ window.addEventListener('DOMContentLoaded', () => {
         addCar(game, source, destn, isPriority);
     }
 
-    addCar(game, "a", "b", false);
-    addCar(game, "c", "b", false);
-    addCar(game, "d", "b", true);
-    addCar(game, "e", "b", false);
-    addCar(game, "i", "d", false);
-    addCar(game, "h", "g", false);
-    addCar(game, "j", "e", false);
+    addCar(game, "a", "d", false);
+    addCar(game, "c", "b", true);
+    // addCar(game, "d", "b", true);
+    // addCar(game, "e", "b", false);
+    // addCar(game, "i", "d", false);
+    // addCar(game, "h", "g", false);
+    // addCar(game, "j", "e", false);
 });
 
 function addCar(game: Game, source: String, destination: String, isPriority: boolean) {

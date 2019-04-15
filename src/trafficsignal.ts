@@ -40,6 +40,12 @@ export default class TrafficSignal {
     mesh: BABYLON.AbstractMesh
     position: BABYLON.Vector2
 
+    // 0: North is green
+    // 1: East is green
+    // 2: South is green
+    // 3: West is green
+    currentGreenForPretimed: number
+
     constructor(id: number, edges: Array<Edge>, scene :BABYLON.Scene, position: BABYLON.Vector2) {
         this.id = id;
         this.edges = edges;
@@ -60,6 +66,7 @@ export default class TrafficSignal {
             West: new BABYLON.SpotLight("westLight"+this.id, new BABYLON.Vector3(this.position.x-3, constants.RED_LIGHT_HEIGHT, this.position.y), new BABYLON.Vector3(1, 0, 0), constants.TRAFFIC_ANGLE, constants.TRAFFIC_EXPONENT, this.scene)
         }
         
+        this.currentGreenForPretimed = 0;
 
         BABYLON.SceneLoader.ImportMesh("", "../images/", "traffic_lights.babylon", this.scene, (newmeshes) => {
             newmeshes.forEach(mesh => {
@@ -80,31 +87,60 @@ export default class TrafficSignal {
     }
 
     operate() {
+        let nextOperateCall: number
+
         if (constants.OPERATE_OLD_MODE) {
-            
-            return;
-        }
+            this.state.North = constants.RELATIVE_DIRECTION.Red;
+            this.state.East = constants.RELATIVE_DIRECTION.Red;
+            this.state.South = constants.RELATIVE_DIRECTION.Red;
+            this.state.West = constants.RELATIVE_DIRECTION.Red;
 
-        this.findPriorityOrder();
-
-        // Prioritize edges with a priority vehicle
-        for (let i=0;i<4;i++) {
-            if (this.edges[this.priorityOrder[i]].hasPriorityVehicle()) {
-                this.prioritizeEdge(i);
+            switch (this.currentGreenForPretimed) {
+                case 0:
+                    if (this.edges[0].weight > 0) {
+                        this.state.North = this.edges[0].cars[0].nextTurn;
+                    }
+                    break;
+                case 1:
+                    if (this.edges[1].weight > 0) {
+                        this.state.East = this.edges[1].cars[0].nextTurn;
+                    }
+                case 2:
+                    if (this.edges[2].weight > 0) {
+                        this.state.South = this.edges[2].cars[0].nextTurn;
+                    }
+                case 3:
+                    if (this.edges[3].weight > 0) {
+                        this.state.West = this.edges[3].cars[0].nextTurn;
+                    }
             }
-        }
-
-        // Prioritize edges that are blocked
-        for (let i=0;i<4;i++) {
-            if (this.edges[this.priorityOrder[i]].isBlocked()) {
-                this.prioritizeEdge(i);
+            nextOperateCall = constants.PRETIMED_LENGTH;
+            this.currentGreenForPretimed = (this.currentGreenForPretimed+1)%4;
+        } else {
+            this.findPriorityOrder();
+    
+            // Prioritize edges with a priority vehicle
+            for (let i=0;i<4;i++) {
+                if (this.edges[this.priorityOrder[i]].hasPriorityVehicle()) {
+                    this.prioritizeEdge(i);
+                }
             }
+    
+            // Prioritize edges that are blocked
+            for (let i=0;i<4;i++) {
+                if (this.edges[this.priorityOrder[i]].isBlocked()) {
+                    this.prioritizeEdge(i);
+                }
+            }
+
+            nextOperateCall = constants.TRAFFIC_OPERATION_SHORT_WAIT_TIME;
+
+            this.determineTrafficState();
         }
 
-        this.determineTrafficState();
         this.setLights();
         
-        let nextOperateCall: number = constants.TRAFFIC_OPERATION_SHORT_WAIT_TIME;
+        
         let callBack: () => void;
         for (let i = 0; i < 4; i++) {
             let states = [this.state.North, this.state.East, this.state.South, this.state.West];
@@ -199,6 +235,7 @@ export default class TrafficSignal {
 
     determineTrafficState() {
         let viableTrafficStates: Array<Array<number>> = constants.TRAFFIC_STATES;
+        let forceRed: Array<Number> = [];
 
         for (let i = 0; viableTrafficStates.length != 1 && i < 4; i++) {
             let highestPriority: number = this.priorityOrder[i];
@@ -212,6 +249,9 @@ export default class TrafficSignal {
 
             // Get which direction the highest priority car has to turn
             let highestPriorityEdgesTurnDirection: number = highestPriorityEdge.cars[0].nextTurn;
+            if (highestPriorityEdgesTurnDirection == null) {
+                forceRed.push(highestPriority);
+            }
 
             let nextIterationViableTrafficStates: Array<Array<number>> = [];
     
@@ -226,6 +266,12 @@ export default class TrafficSignal {
             }
         };
 
+        for (let i = 0; i < 4; i++) {
+            if (forceRed.includes(i)) {
+                viableTrafficStates[0][i] = constants.RELATIVE_DIRECTION.Red
+            }
+        }
+        
         this.state.North = viableTrafficStates[0][0];
         this.state.East = viableTrafficStates[0][1];
         this.state.South = viableTrafficStates[0][2];
