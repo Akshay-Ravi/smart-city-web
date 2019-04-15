@@ -211,7 +211,13 @@ export default class Car {
         this.mesh.animations.push(moveAnim);
 
         // Rotate car to give turning effect
-        this.mesh.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(rotationAngle));
+        let turnVector: BABYLON.Vector3;
+        if (this.isPriority) {
+            turnVector = constants.PRIORITY_TURN_VECTOR;
+        } else {
+            turnVector = constants.STANDARD_TURN_VECTOR
+        }
+        this.mesh.rotate(turnVector, BABYLON.Tools.ToRadians(rotationAngle));
         
         // Begin turning animation
         let animation = this.scene.beginAnimation(this.mesh, 0, turnFrames, false);

@@ -189,25 +189,38 @@ class Game {
 
     addCar(edge: Edge, destination: GraphNode, isPriority: boolean): void {
         this._numberOfCars++;
+        let name: string;
+        let turnVector: BABYLON.Vector3;
+        if (isPriority) {
+            name = "PrioritySportsCar.babylon"
+            turnVector = constants.PRIORITY_TURN_VECTOR;
+        } else {
+            name = "SportsCar.babylon"
+            turnVector = constants.STANDARD_TURN_VECTOR
+        }
 
-        BABYLON.SceneLoader.ImportMesh("", "../images/cars/Babylon/", "SportsCar.babylon", this._scene, (newmeshes) => {
+        BABYLON.SceneLoader.ImportMesh("", "../images/cars/Babylon/", name, this._scene, (newmeshes) => {
             newmeshes.forEach(mesh => {
                 mesh.id = "car"+this._numberOfCars;
                 mesh.position = edge.source.pos.getVector3();
-                mesh.scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
+                if (isPriority) {
+                    mesh.scaling = new BABYLON.Vector3(0.003, 0.003, 0.003);
+                } else {
+                    mesh.scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
+                }
 
                 switch (edge.direction) {
                     case constants.ABSOLUTE_DIRECTION.North:
-                        mesh.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(180));
+                        mesh.rotate(turnVector, BABYLON.Tools.ToRadians(180));
                         break;
                     case constants.ABSOLUTE_DIRECTION.East:
-                        mesh.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(270));
+                        mesh.rotate(turnVector, BABYLON.Tools.ToRadians(270));
                         break;
                     case constants.ABSOLUTE_DIRECTION.South:
-                        mesh.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(0));
+                        mesh.rotate(turnVector, BABYLON.Tools.ToRadians(0));
                         break;
                     case constants.ABSOLUTE_DIRECTION.West:
-                        mesh.rotate(new BABYLON.Vector3(0,0,1), BABYLON.Tools.ToRadians(90));
+                        mesh.rotate(turnVector, BABYLON.Tools.ToRadians(90));
                         break;
                 }
                 
@@ -276,12 +289,12 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     addCar(game, "a", "d", false);
-    addCar(game, "c", "b", true);
-    // addCar(game, "d", "b", true);
-    // addCar(game, "e", "b", false);
-    // addCar(game, "i", "d", false);
-    // addCar(game, "h", "g", false);
-    // addCar(game, "j", "e", false);
+    addCar(game, "b", "e", false);
+    addCar(game, "d", "b", false);
+    addCar(game, "e", "b", false);
+    addCar(game, "i", "d", false);
+    addCar(game, "h", "g", false);
+    addCar(game, "j", "e", false);
 });
 
 function addCar(game: Game, source: String, destination: String, isPriority: boolean) {

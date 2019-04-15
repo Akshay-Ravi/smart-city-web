@@ -115,5 +115,8 @@ export const TRAFFIC_EXPONENT = 100;
 export const OPERATE_OLD_MODE = false;
 export const PRETIMED_LENGTH = 1000;
 
+export const STANDARD_TURN_VECTOR = new BABYLON.Vector3(0, 0, 1);
+export const PRIORITY_TURN_VECTOR = new BABYLON.Vector3(0, 1, 0);
+
 // The single instance of the game map that will be used by all
 export const GAME_MAP = new Map();
