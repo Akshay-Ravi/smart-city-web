@@ -288,13 +288,46 @@ window.addEventListener('DOMContentLoaded', () => {
         addCar(game, source, destn, isPriority);
     }
 
-    addCar(game, "a", "d", false);
-    addCar(game, "b", "e", false);
-    addCar(game, "d", "b", false);
-    addCar(game, "e", "b", false);
-    addCar(game, "i", "d", false);
-    addCar(game, "h", "g", false);
-    addCar(game, "j", "e", false);
+    // Shortest possible path
+    // addCar(game, "a", "d", false);
+
+    // Longest possible path
+    // addCar(game, "a", "j", false);
+
+    // Cars from all sources to destinations
+    // addCar(game, "a", "i", false);
+    // addCar(game, "b", "f", false);
+    // addCar(game, "f", "e", false);
+    // addCar(game, "d", "c", false);
+    // addCar(game, "c", "h", false);
+    // addCar(game, "e", "a", false);
+    // addCar(game, "g", "b", false);
+    // addCar(game, "h", "j", false);
+    // addCar(game, "i", "g", false);
+    // addCar(game, "j", "d", false);
+
+    // Congestion
+    addCar(game, "d", "e", false);
+    setTimeout(() => {
+        addCar(game, "d", "e", false);
+    }, 3000);
+
+    addCar(game, "e", "d", false);
+    setTimeout(() => {
+        addCar(game, "e", "d", false);
+    }, 3000);
+
+    addCar(game, "i", "b", false);
+    setTimeout(() => {
+        addCar(game, "i", "b", false);
+    }, 3000);
+
+    setTimeout(() => {
+        addCar(game, "b", "i", false);
+    }, 7000);
+    setTimeout(() => {
+        addCar(game, "b", "i", false);
+    }, 10000);
 });
 
 function addCar(game: Game, source: String, destination: String, isPriority: boolean) {
